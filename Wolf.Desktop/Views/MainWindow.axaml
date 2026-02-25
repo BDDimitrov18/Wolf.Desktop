@@ -138,7 +138,30 @@
         </Border>
 
         <!-- ========== MAIN — Dockable Tab Area ========== -->
-        <idc:DockControl Grid.Column="1"
-                         Layout="{Binding Layout}"/>
+        <Grid Grid.Column="1" RowDefinitions="Auto,*">
+            <!-- Error notification bar -->
+            <Border Grid.Row="0"
+                    Background="#b83232"
+                    Padding="14,8"
+                    IsVisible="{Binding IsErrorVisible}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Foreground="White"
+                               FontSize="12" FontWeight="SemiBold"
+                               VerticalAlignment="Center"/>
+                    <Button Grid.Column="1"
+                            Command="{Binding DismissErrorCommand}"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Padding="6,2"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="&#x2715;" Foreground="#ccffffff" FontSize="12"/>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <idc:DockControl Grid.Row="1"
+                             Layout="{Binding Layout}"/>
+        </Grid>
     </Grid>
 </Window>

@@ -61,4 +61,9 @@ public static class ServiceLocator
         if (id is null) return "";
         return EmployeesCache.TryGetValue(id.Value, out var name) ? name : $"#{id}";
     }
+
+    /// <summary>Fires when any VM wants to show an error to the user.</summary>
+    public static event Action<string>? ErrorOccurred;
+
+    public static void ShowError(string message) => ErrorOccurred?.Invoke(message);
 }

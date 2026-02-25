@@ -74,7 +74,7 @@ public partial class AllPlotsViewModel : ViewModelBase
             if (SelectedPlot?.Plotid == plot.Plotid)
                 SelectedPlot = null;
         }
-        catch { /* TODO: surface error */ }
+        catch (Exception ex) { ServiceLocator.ShowError($"Грешка при изтриване на парцел: {ex.Message}"); }
     }
 
     [RelayCommand]

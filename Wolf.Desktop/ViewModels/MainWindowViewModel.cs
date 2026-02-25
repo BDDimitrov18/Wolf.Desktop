@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Dock.Model.Controls;
@@ -17,6 +18,11 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private IRootDock? _layout;
     [ObservableProperty] private ObservableCollection<NavItemViewModel> _navItems = [];
 
+    // Error notification
+    [ObservableProperty] private string? _errorMessage;
+    [ObservableProperty] private bool _isErrorVisible;
+    private DispatcherTimer? _errorTimer;
+
     // Sidebar footer — bound to logged-in user
     public string CurrentUserDisplayName => ServiceLocator.Auth.CurrentDisplayName;
     public string CurrentUserInitials => ServiceLocator.Auth.CurrentInitials;
@@ -29,8 +35,28 @@ public partial class MainWindowViewModel : ViewModelBase
         Layout = _factory.CreateLayout();
         _factory.InitLayout(Layout);
 
+        ServiceLocator.ErrorOccurred += OnErrorOccurred;
+
         OpenOrCreateTab("orders");
     }
+
+    private void OnErrorOccurred(string message)
+    {
+        ErrorMessage = message;
+        IsErrorVisible = true;
+
+        _errorTimer?.Stop();
+        _errorTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(4) };
+        _errorTimer.Tick += (_, _) =>
+        {
+            _errorTimer.Stop();
+            IsErrorVisible = false;
+        };
+        _errorTimer.Start();
+    }
+
+    [RelayCommand]
+    private void DismissError() => IsErrorVisible = false;
 
     [RelayCommand]
     private void OpenProfile()

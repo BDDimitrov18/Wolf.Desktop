@@ -72,7 +72,7 @@ public partial class AllDocumentsViewModel : ViewModelBase
             if (SelectedDocument?.Documentid == doc.Documentid)
                 SelectedDocument = null;
         }
-        catch { /* TODO: surface error */ }
+        catch (Exception ex) { ServiceLocator.ShowError($"Грешка при изтриване на документ: {ex.Message}"); }
     }
 
     [RelayCommand]

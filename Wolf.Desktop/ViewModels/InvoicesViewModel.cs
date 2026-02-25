@@ -86,7 +86,7 @@ public partial class InvoicesViewModel : ViewModelBase
             if (SelectedInvoice?.Invoiceid == row.Invoiceid)
                 SelectedInvoice = null;
         }
-        catch { /* TODO: surface error */ }
+        catch (Exception ex) { ServiceLocator.ShowError($"Грешка при изтриване на фактура: {ex.Message}"); }
     }
 
     [RelayCommand]

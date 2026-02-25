@@ -72,7 +72,7 @@ public partial class ClientsViewModel : ViewModelBase
             if (SelectedClient?.Clientid == client.Clientid)
                 SelectedClient = null;
         }
-        catch { /* TODO: surface error */ }
+        catch (Exception ex) { ServiceLocator.ShowError($"Грешка при изтриване на клиент: {ex.Message}"); }
     }
 
     [RelayCommand]

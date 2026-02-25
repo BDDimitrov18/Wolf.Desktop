@@ -72,7 +72,7 @@ public partial class PlotsDetailViewModel : ViewModelBase
         {
             await ServiceLocator.Cache.DeletePlotAsync(card.PlotId);
         }
-        catch { /* TODO: surface error */ }
+        catch (Exception ex) { ServiceLocator.ShowError($"Грешка: {ex.Message}"); }
     }
 
     [RelayCommand]
@@ -107,6 +107,6 @@ public partial class PlotsDetailViewModel : ViewModelBase
             if (rel is not null)
                 await ServiceLocator.Cache.UnlinkDocumentFromPlotAsync(rel.Documentplotid);
         }
-        catch { /* TODO: surface error */ }
+        catch (Exception ex) { ServiceLocator.ShowError($"Грешка: {ex.Message}"); }
     }
 }

@@ -313,9 +313,9 @@ public partial class OrdersViewModel : ViewModelBase
             await ServiceLocator.Cache.DeleteRequestAsync(row.Requestid);
             if (SelectedOrder == row) SelectedOrder = null;
         }
-        catch
+        catch (Exception ex)
         {
-            // TODO: surface error
+            ServiceLocator.ShowError($"Грешка при изтриване на поръчка: {ex.Message}");
         }
     }
 }

@@ -101,7 +101,7 @@ public partial class ActivitiesDetailViewModel : ViewModelBase
         {
             await ServiceLocator.Cache.DeleteActivityAsync(SelectedActivity.Activityid);
         }
-        catch { /* TODO: surface error */ }
+        catch (Exception ex) { ServiceLocator.ShowError($"Грешка: {ex.Message}"); }
     }
 
     [RelayCommand]
@@ -126,6 +126,6 @@ public partial class ActivitiesDetailViewModel : ViewModelBase
         {
             await ServiceLocator.Cache.DeleteTaskAsync(task.Taskid);
         }
-        catch { /* TODO: surface error */ }
+        catch (Exception ex) { ServiceLocator.ShowError($"Грешка: {ex.Message}"); }
     }
 }
