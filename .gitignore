@@ -1,0 +1,46 @@
+## .NET
+bin/
+obj/
+publish/
+*.user
+*.userosscache
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+
+## NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+## IDE — JetBrains Rider / ReSharper
+.idea/
+*.sln.iml
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## IDE — Visual Studio
+.vs/
+*.rsuser
+*.sln.docstates
+
+## IDE — VS Code
+.vscode/
+
+## OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## User secrets / credentials
+*.pfx
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+
+## Logs
+logs/
+*.log
