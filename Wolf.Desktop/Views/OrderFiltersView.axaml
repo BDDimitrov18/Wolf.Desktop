@@ -1,0 +1,260 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             xmlns:dto="using:Wolf.Dtos"
+             xmlns:conv="using:Wolf.Desktop.Converters"
+             x:Class="Wolf.Desktop.Views.OrderFiltersView"
+             x:CompileBindings="False"
+             Background="{StaticResource BrushSurface}">
+
+    <UserControl.Resources>
+        <conv:ClientNameConverter x:Key="ClientNameConverter"/>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="20" MaxWidth="800" Margin="32">
+
+            <!-- Header -->
+            <TextBlock Text="Филтри за поръчки"
+                       FontSize="20" FontWeight="Bold"
+                       Margin="0,0,0,4"/>
+
+            <!-- ═══ CHECKBOXES (top row) ═══ -->
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8" Padding="20,16">
+                <WrapPanel Orientation="Horizontal">
+                    <CheckBox Content="Просрочени" IsChecked="{Binding FilterOverdue}" Margin="0,0,24,0"/>
+                    <CheckBox Content="Лични" IsChecked="{Binding FilterPersonal}" Margin="0,0,24,0"/>
+                    <CheckBox Content="За деня" IsChecked="{Binding FilterForToday}" Margin="0,0,24,0"/>
+                    <CheckBox Content="За седмицата" IsChecked="{Binding FilterForWeek}" Margin="0,0,24,0"/>
+                    <CheckBox Content="Със звезда" IsChecked="{Binding FilterStarred}" Margin="0,0,0,0"/>
+                </WrapPanel>
+            </Border>
+
+            <!-- ═══ DROPDOWNS ROW ═══ -->
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8" Padding="20,16">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="ФИЛТРИ ПО СТАТУС"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+                    <Grid ColumnDefinitions="*,16,*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="5">
+                            <TextBlock Text="Архивен Статус" FontSize="12" FontWeight="Medium"/>
+                            <ComboBox ItemsSource="{x:Static vm:OrderFiltersViewModel.ArchiveStatusOptions}"
+                                      SelectedItem="{Binding ArchiveStatus}"
+                                      PlaceholderText="Всички"
+                                      HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="5">
+                            <TextBlock Text="Статус Задача" FontSize="12" FontWeight="Medium"/>
+                            <ComboBox ItemsSource="{x:Static vm:OrderFiltersViewModel.TaskStatusOptions}"
+                                      SelectedItem="{Binding TaskStatusFilter}"
+                                      PlaceholderText="Всички"
+                                      HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4" Spacing="5">
+                            <TextBlock Text="Статус Плащане" FontSize="12" FontWeight="Medium"/>
+                            <ComboBox ItemsSource="{x:Static vm:OrderFiltersViewModel.PaymentStatusOptions}"
+                                      SelectedItem="{Binding PaymentStatusFilter}"
+                                      PlaceholderText="Всички"
+                                      HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ═══ TEXT INPUTS ═══ -->
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8" Padding="20,16">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="ТЪРСЕНЕ ПО ПОЛЕТА"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+
+                    <Grid ColumnDefinitions="*,16,*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="5">
+                            <TextBlock Text="Номер" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Classes="filter-text" Text="{Binding OrderNumber}" Watermark="Номер на поръчка"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="5">
+                            <TextBlock Text="Населено Място" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Classes="filter-text" Text="{Binding Settlement}" Watermark="Град / Село"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4" Spacing="5">
+                            <TextBlock Text="Номер Имот" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Classes="filter-text" Text="{Binding PlotNumber}" Watermark="Номер на имот"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,16,*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="5">
+                            <TextBlock Text="УПИ" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Classes="filter-text" Text="{Binding RegulatedPlotNumber}" Watermark="Регулиран номер"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="5">
+                            <TextBlock Text="Кв" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Classes="filter-text" Text="{Binding Neighborhood}" Watermark="Квартал"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4" Spacing="5">
+                            <TextBlock Text="Име поръчка" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Classes="filter-text" Text="{Binding OrderName}" Watermark="Име на поръчка"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Търсене по коментар" FontSize="12" FontWeight="Medium"/>
+                        <TextBox Classes="filter-text" Text="{Binding CommentSearch}"
+                                 TextWrapping="Wrap"
+                                 Height="60"
+                                 Watermark="Текст в коментара..."/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ═══ CLIENT PICKER ═══ -->
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8" Padding="20,16">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="КЛИЕНТ"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <AutoCompleteBox x:Name="ClientSearchBox"
+                                         ItemsSource="{Binding AvailableClients}"
+                                         SelectedItem="{Binding ClientToAdd}"
+                                         ValueMemberBinding="{Binding ., Converter={StaticResource ClientNameConverter}}"
+                                         FilterMode="Custom"
+                                         MinimumPrefixLength="0"
+                                         Watermark="Въведи име на клиент..."
+                                         Width="300">
+                            <AutoCompleteBox.ItemTemplate>
+                                <DataTemplate x:DataType="dto:ClientDto">
+                                    <TextBlock>
+                                        <Run Text="{Binding Firstname}"/>
+                                        <Run Text=" "/>
+                                        <Run Text="{Binding Middlename}"/>
+                                        <Run Text=" "/>
+                                        <Run Text="{Binding Lastname}"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </AutoCompleteBox.ItemTemplate>
+                        </AutoCompleteBox>
+                        <Button Classes="primary sm"
+                                Command="{Binding AddClientCommand}"
+                                Content="Добави"/>
+                    </StackPanel>
+                    <ItemsControl ItemsSource="{Binding SelectedClients}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="dto:ClientDto">
+                                <Border Background="{StaticResource BrushBg}"
+                                        CornerRadius="4"
+                                        Padding="10,5"
+                                        Margin="0,2">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run Text="{Binding Firstname}"/>
+                                            <Run Text=" "/>
+                                            <Run Text="{Binding Lastname}"/>
+                                        </TextBlock>
+                                        <Button Classes="sm"
+                                                Content="✕"
+                                                FontSize="10"
+                                                Command="{Binding $parent[UserControl].DataContext.RemoveClientCommand}"
+                                                CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- ═══ OWNER PICKER ═══ -->
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8" Padding="20,16">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="СОБСТВЕНИК"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <AutoCompleteBox x:Name="OwnerSearchBox"
+                                         ItemsSource="{Binding AvailableOwners}"
+                                         SelectedItem="{Binding OwnerToAdd}"
+                                         ValueMemberBinding="{Binding Fullname}"
+                                         FilterMode="Contains"
+                                         MinimumPrefixLength="0"
+                                         Watermark="Въведи име на собственик..."
+                                         Width="300">
+                            <AutoCompleteBox.ItemTemplate>
+                                <DataTemplate x:DataType="dto:OwnerDto">
+                                    <TextBlock Text="{Binding Fullname}"/>
+                                </DataTemplate>
+                            </AutoCompleteBox.ItemTemplate>
+                        </AutoCompleteBox>
+                        <Button Classes="primary sm"
+                                Command="{Binding AddOwnerCommand}"
+                                Content="Добави"/>
+                    </StackPanel>
+                    <ItemsControl ItemsSource="{Binding SelectedOwners}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="dto:OwnerDto">
+                                <Border Background="{StaticResource BrushBg}"
+                                        CornerRadius="4"
+                                        Padding="10,5"
+                                        Margin="0,2">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="{Binding Fullname}" VerticalAlignment="Center"/>
+                                        <Button Classes="sm"
+                                                Content="✕"
+                                                FontSize="10"
+                                                Command="{Binding $parent[UserControl].DataContext.RemoveOwnerCommand}"
+                                                CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- ═══ EMPLOYEE CHECKBOXES ═══ -->
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8" Padding="20,16">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="ЗА СЛУЖИТЕЛИ"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+                    <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding EmployeeItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:EmployeeCheckItem">
+                                    <CheckBox Content="{Binding Name}"
+                                              IsChecked="{Binding IsChecked}"
+                                              Margin="0,2"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+            <!-- ═══ ACTION BUTTONS ═══ -->
+            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,4,0,16">
+                <Button Classes="primary"
+                        Command="{Binding ApplyCommand}">
+                    Приложи
+                </Button>
+                <Button Command="{Binding ResetCommand}">
+                    Нулиране
+                </Button>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

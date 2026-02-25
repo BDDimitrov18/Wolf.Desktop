@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             x:Class="Wolf.Desktop.Views.EditInvoiceView"
+             x:DataType="vm:EditInvoiceViewModel"
+             Background="{StaticResource BrushSurface}">
+
+    <ScrollViewer>
+        <StackPanel Spacing="0" MaxWidth="720" Margin="32">
+
+            <TextBlock Text="{Binding FormTitle}"
+                       FontSize="20" FontWeight="Bold"
+                       Margin="0,0,0,28"/>
+
+            <Border IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Background="#fceaea"
+                    CornerRadius="6"
+                    Padding="14,10"
+                    Margin="0,0,0,16">
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="#b83232" FontSize="12"/>
+            </Border>
+
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8"
+                    Padding="24"
+                    Margin="0,0,0,16">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="ДЕТАЙЛИ НА ФАКТУРА"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+
+                    <Grid ColumnDefinitions="*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Номер на фактура" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Text="{Binding Number}" Watermark="напр. INV-001"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Сума (лв.)" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Text="{Binding Sum}" Watermark="0.00"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Поръчка" FontSize="12" FontWeight="Medium"/>
+                        <ComboBox ItemsSource="{Binding AvailableOrders}"
+                                  SelectedValue="{Binding RequestId}"
+                                  SelectedValueBinding="{Binding Requestid}"
+                                  HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Classes="primary"
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={x:Static BoolConverters.Not}}">
+                    Запази фактура
+                </Button>
+                <Button Command="{Binding CancelCommand}">Отказ</Button>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

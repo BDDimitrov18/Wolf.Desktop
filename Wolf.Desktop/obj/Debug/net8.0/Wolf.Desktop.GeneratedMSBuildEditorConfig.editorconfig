@@ -1,0 +1,94 @@
+is_global = true
+build_property.AvaloniaNameGeneratorIsEnabled = true
+build_property.AvaloniaNameGeneratorBehavior = InitializeComponent
+build_property.AvaloniaNameGeneratorDefaultFieldModifier = internal
+build_property.AvaloniaNameGeneratorFilterByPath = *
+build_property.AvaloniaNameGeneratorFilterByNamespace = *
+build_property.AvaloniaNameGeneratorViewFileNamingStrategy = NamespaceAndClassName
+build_property.AvaloniaNameGeneratorAttachDevTools = true
+build_property.MvvmToolkitEnableINotifyPropertyChangingSupport = true
+build_property._MvvmToolkitIsUsingWindowsRuntimePack = false
+build_property.CsWinRTComponent = 
+build_property.CsWinRTAotOptimizerEnabled = 
+build_property.CsWinRTAotWarningLevel = 
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = Wolf.Desktop
+build_property.ProjectDir = /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/App.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/AllDocumentsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/AllPlotsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/ClientsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/DashboardView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/EditActivityView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/EditClientView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/EditDocumentView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/EditInvoiceView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/EditOrderView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/EditPlotView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/EditTaskView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/EmployeeStatsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/EmployeesView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/InvoicesView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/LoginWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/MainWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/OrderClientLinkView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/OrderFiltersView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/OrdersView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/PlaceholderView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/UserProfileView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/WolfDocumentView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             x:Class="Wolf.Desktop.Views.PlaceholderView"
+             x:DataType="vm:PlaceholderViewModel"
+             Background="{StaticResource BrushSurface}">
+
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
+        <TextBlock Text="{Binding Title}"
+                   FontSize="20" FontWeight="Bold"
+                   Foreground="{StaticResource BrushTextMuted}"
+                   HorizontalAlignment="Center"/>
+        <TextBlock Text="Coming soon"
+                   FontSize="13"
+                   Foreground="{StaticResource BrushTextMuted}"
+                   HorizontalAlignment="Center"/>
+    </StackPanel>
+</UserControl>

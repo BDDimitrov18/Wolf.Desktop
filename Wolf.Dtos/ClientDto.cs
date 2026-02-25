@@ -1,0 +1,24 @@
+namespace Wolf.Dtos;
+
+public class ClientDto
+{
+    public int Clientid { get; set; }
+    public string Firstname { get; set; } = null!;
+    public string? Middlename { get; set; }
+    public string? Lastname { get; set; }
+    public string? Phone { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+    public string? Clientlegaltype { get; set; }
+}
+
+public class CreateClientDto
+{
+    public string Firstname { get; set; } = null!;
+    public string? Middlename { get; set; }
+    public string? Lastname { get; set; }
+    public string? Phone { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+    public string? Clientlegaltype { get; set; }
+}

@@ -1,0 +1,926 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             xmlns:dto="using:Wolf.Dtos"
+             xmlns:conv="using:Wolf.Desktop.Converters"
+             x:Class="Wolf.Desktop.Views.OrdersView"
+             x:CompileBindings="False">
+
+    <Grid RowDefinitions="Auto,0.45*,6,*">
+
+        <!-- ===== TOP BAR ===== -->
+        <Border Grid.Row="0"
+                Background="{StaticResource BrushSurface}"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{StaticResource BrushBorder}"
+                Height="52">
+            <Grid ColumnDefinitions="*,Auto" Margin="24,0">
+                <TextBlock Text="Поръчки"
+                           FontSize="16" FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+                <Border Grid.Column="1"
+                        Background="{StaticResource BrushSurfaceAlt}"
+                        BorderBrush="{StaticResource BrushBorder}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="10,6"
+                        Width="260">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="🔍" VerticalAlignment="Center" FontSize="12"/>
+                        <TextBox Text="{Binding SearchText}"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 Padding="0"
+                                 Watermark="Търсене на поръчки..."
+                                 VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ===== TOP PANEL: ORDER TABLE ===== -->
+        <Grid Grid.Row="1" RowDefinitions="Auto,*">
+
+            <!-- Toolbar -->
+            <StackPanel Grid.Row="0"
+                        Orientation="Horizontal"
+                        Spacing="10"
+                        Margin="24,14">
+                <Button Classes="primary sm"
+                        Command="{Binding NewOrderCommand}">
+                    + Нова поръчка
+                </Button>
+                <Button Classes="sm"
+                        Command="{Binding OpenFiltersCommand}">
+                    🔍 Филтри
+                </Button>
+                <StackPanel Orientation="Horizontal" Spacing="4" Margin="8,0,0,0">
+                    <ItemsControl ItemsSource="{Binding FilterOptions}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="4"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Classes="sm"
+                                        Content="{Binding}"
+                                        Command="{Binding $parent[UserControl].DataContext.SetFilterCommand}"
+                                        CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Order rows -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Header -->
+                    <Grid ColumnDefinitions="44,*,80,100,70,80,65"
+                          Background="{StaticResource BrushSurfaceAlt}"
+                          Height="32">
+                        <TextBlock Grid.Column="0" Text="#"
+                                   FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}"
+                                   VerticalAlignment="Center" Margin="12,0,0,0"/>
+                        <TextBlock Grid.Column="1" Text="ИМЕ НА ПОРЪЧКА"
+                                   FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}"
+                                   VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBlock Grid.Column="2" Text="СТАТУС"
+                                   FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}"
+                                   VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBlock Grid.Column="3" Text="СЪЗДАТЕЛ"
+                                   FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}"
+                                   VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBlock Grid.Column="4" Text="ЦЕНА"
+                                   FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}"
+                                   VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBlock Grid.Column="5" Text="ПЛАЩАНЕ"
+                                   FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}"
+                                   VerticalAlignment="Center" Margin="4,0"/>
+                    </Grid>
+                    <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+
+                    <ListBox ItemsSource="{Binding FilteredOrders}"
+                             SelectedItem="{Binding SelectedOrder}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Padding="0">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="vm:OrderRowViewModel">
+                                <StackPanel>
+                                    <!-- Main row -->
+                                    <Grid ColumnDefinitions="44,*,80,100,70,80,65"
+                                          MinHeight="36"
+                                          Background="Transparent">
+                                        <Grid.Styles>
+                                            <Style Selector="Grid:pointerover">
+                                                <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}"/>
+                                            </Style>
+                                        </Grid.Styles>
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding Requestid}"
+                                                   FontFamily="IBM Plex Mono, Consolas"
+                                                   Foreground="{StaticResource BrushTextMuted}"
+                                                   FontSize="12"
+                                                   VerticalAlignment="Center"
+                                                   Margin="12,0,0,0"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding Requestname}"
+                                                   FontWeight="SemiBold"
+                                                   FontSize="12.5"
+                                                   VerticalAlignment="Center"
+                                                   Margin="4,0"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <Border Grid.Column="2"
+                                                CornerRadius="12"
+                                                Padding="10,2"
+                                                Margin="4,0"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Left"
+                                                Background="{Binding Status, Converter={x:Static conv:StatusBgConverter.Instance}}">
+                                            <TextBlock Text="{Binding Status}"
+                                                       FontSize="11" FontWeight="SemiBold"
+                                                       Foreground="{Binding Status, Converter={x:Static conv:StatusFgConverter.Instance}}"/>
+                                        </Border>
+                                        <TextBlock Grid.Column="3"
+                                                   Text="{Binding CreatorName}"
+                                                   Foreground="{StaticResource BrushTextSecondary}"
+                                                   FontSize="12.5"
+                                                   VerticalAlignment="Center"
+                                                   Margin="4,0"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="4"
+                                                   Text="{Binding Price}"
+                                                   FontFamily="IBM Plex Mono, Consolas"
+                                                   FontSize="12.5"
+                                                   VerticalAlignment="Center"
+                                                   Margin="4,0"/>
+                                        <TextBlock Grid.Column="5"
+                                                   Text="{Binding Paymentstatus}"
+                                                   Foreground="{StaticResource BrushTextSecondary}"
+                                                   FontSize="12"
+                                                   VerticalAlignment="Center"
+                                                   Margin="4,0"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <StackPanel Grid.Column="6"
+                                                    Orientation="Horizontal"
+                                                    Spacing="2"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center">
+                                            <Button Classes="icon sm"
+                                                    Command="{Binding EditCommand}"
+                                                    ToolTip.Tip="Редактиране">
+                                                <TextBlock Text="✏️" FontSize="13"/>
+                                            </Button>
+                                            <Button Classes="icon sm"
+                                                    Command="{Binding DeleteCommand}"
+                                                    ToolTip.Tip="Изтриване">
+                                                <TextBlock Text="🗑️" FontSize="13"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Expand content — shown when this item is selected -->
+                                    <Border IsVisible="{Binding $parent[ListBoxItem].IsSelected}"
+                                            Background="{StaticResource BrushSurfaceAlt}"
+                                            BorderThickness="3,0,0,0"
+                                            BorderBrush="{StaticResource BrushAccent}"
+                                            Padding="20,12,20,16">
+                                        <StackPanel Spacing="14">
+                                            <!-- Collapse arrow -->
+                                            <Button Classes="icon sm"
+                                                    HorizontalAlignment="Right"
+                                                    Margin="0,-4,0,0"
+                                                    ToolTip.Tip="Свиване"
+                                                    Command="{Binding $parent[UserControl].DataContext.DeselectOrderCommand}">
+                                                <TextBlock Text="▲" FontSize="11" Foreground="{StaticResource BrushTextMuted}"/>
+                                            </Button>
+
+                                            <WrapPanel Orientation="Horizontal">
+                                                <StackPanel Margin="0,0,24,8" Width="120">
+                                                    <TextBlock Text="ИД ПОРЪЧКА" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Requestid, StringFormat='ORD-{0}'}"
+                                                               FontFamily="IBM Plex Mono, Consolas" FontSize="12.5"/>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="200">
+                                                    <TextBlock Text="ИМЕ НА ПОРЪЧКА" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Requestname}" FontSize="12.5" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="140">
+                                                    <TextBlock Text="СТАТУС" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <Border CornerRadius="12" Padding="10,2" HorizontalAlignment="Left"
+                                                            Background="{Binding Status, Converter={x:Static conv:StatusBgConverter.Instance}}">
+                                                        <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="SemiBold"
+                                                                   Foreground="{Binding Status, Converter={x:Static conv:StatusFgConverter.Instance}}"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="160">
+                                                    <TextBlock Text="ЦЕНА" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Price, StringFormat='{}{0:N0} BGN'}"
+                                                               FontFamily="IBM Plex Mono, Consolas" FontSize="12.5"/>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="160">
+                                                    <TextBlock Text="АВАНС" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Advance, StringFormat='{}{0:N0} BGN'}"
+                                                               FontFamily="IBM Plex Mono, Consolas" FontSize="12.5"/>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="160">
+                                                    <TextBlock Text="СТАТУС НА ПЛАЩАНЕ" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Paymentstatus}" FontSize="12.5"/>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="180">
+                                                    <TextBlock Text="СЪЗДАТЕЛ" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding CreatorName}" FontSize="12.5"/>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="280"
+                                                            IsVisible="{Binding Comments, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                                    <TextBlock Text="КОМЕНТАРИ" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Comments}" FontSize="12.5" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="280"
+                                                            IsVisible="{Binding Path, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                                    <TextBlock Text="ФАЙЛОВ ПЪТ" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Path}" FontSize="11.5"
+                                                               Foreground="{StaticResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                            </WrapPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Button Classes="sm" Command="{Binding EditCommand}">
+                                                    ✏️ Редактиране на поръчка
+                                                </Button>
+                                                <Button Classes="sm danger" Command="{Binding DeleteCommand}">
+                                                    🗑️ Изтриване
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- ===== GRID SPLITTER ===== -->
+        <GridSplitter Grid.Row="2"
+                      Height="6"
+                      HorizontalAlignment="Stretch"
+                      Background="{StaticResource BrushBorder}"
+                      ResizeDirection="Rows"/>
+
+        <!-- ===== BOTTOM PANEL: DETAIL TABS ===== -->
+        <Grid Grid.Row="3" RowDefinitions="Auto,*">
+            <Border Grid.Row="0"
+                    Background="{StaticResource BrushSurface}"
+                    BorderThickness="0,0,0,1"
+                    BorderBrush="{StaticResource BrushBorder}">
+                <TabControl Background="Transparent" Padding="0" BorderThickness="0"
+                            SelectedIndex="{Binding SelectedDetailTabIndex}">
+                    <TabControl.Styles>
+                        <Style Selector="TabItem">
+                            <Setter Property="FontSize" Value="12"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Foreground" Value="{StaticResource BrushTextSecondary}"/>
+                            <Setter Property="Padding" Value="18,10"/>
+                        </Style>
+                        <Style Selector="TabItem:selected">
+                            <Setter Property="Foreground" Value="{StaticResource BrushAccent}"/>
+                        </Style>
+                    </TabControl.Styles>
+
+                    <!-- ========== ACTIVITIES TAB ========== -->
+                    <TabItem Header="Дейности">
+                        <Grid ColumnDefinitions="0.45*,6,*">
+
+                            <!-- ── Activity Grid ── -->
+                            <Grid Grid.Column="0" RowDefinitions="Auto,Auto,*">
+                                <!-- Toolbar -->
+                                <Border Grid.Row="0"
+                                        Background="{StaticResource BrushSurfaceAlt}"
+                                        BorderThickness="0,0,0,1"
+                                        BorderBrush="{StaticResource BrushBorder}"
+                                        Padding="12,6">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <TextBlock Text="ДЕЙНОСТИ" FontSize="11" FontWeight="Bold"
+                                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                                            <Button Classes="icon sm" ToolTip.Tip="Нова дейност"
+                                                    Command="{Binding ActivitiesDetail.AddActivityCommand}">
+                                                <TextBlock Text="+" FontSize="14" FontWeight="Bold"/>
+                                            </Button>
+                                            <Button Classes="icon sm" ToolTip.Tip="Редактиране на дейност"
+                                                    Command="{Binding ActivitiesDetail.EditActivityCommand}">
+                                                <TextBlock Text="✏️" FontSize="11"/>
+                                            </Button>
+                                            <Button Classes="icon sm" ToolTip.Tip="Изтриване на дейност"
+                                                    Command="{Binding ActivitiesDetail.DeleteActivityCommand}">
+                                                <TextBlock Text="🗑️" FontSize="11"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                                <!-- Header -->
+                                <Grid Grid.Row="1" ColumnDefinitions="44,*,90,80"
+                                      Background="{StaticResource BrushSurfaceAlt}" Height="28">
+                                    <TextBlock Grid.Column="0" Text="#" FontSize="10" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                    <TextBlock Grid.Column="1" Text="НАЧАЛНА ДАТА" FontSize="10" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                                    <TextBlock Grid.Column="2" Text="ИЗПЪЛНИТЕЛ" FontSize="10" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                                    <TextBlock Grid.Column="3" Text="ПЛАЩАНЕ" FontSize="10" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                                </Grid>
+                                <!-- Rows -->
+                                <ListBox Grid.Row="2"
+                                         ItemsSource="{Binding ActivitiesDetail.Activities}"
+                                         SelectedItem="{Binding ActivitiesDetail.SelectedActivity}"
+                                         Background="Transparent" BorderThickness="0" Padding="0">
+                                    <ListBox.Styles>
+                                        <Style Selector="ListBoxItem">
+                                            <Setter Property="Padding" Value="0"/>
+                                            <Setter Property="Margin" Value="0"/>
+                                        </Style>
+                                    </ListBox.Styles>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="dto:ActivityDto">
+                                            <StackPanel>
+                                                <Grid ColumnDefinitions="44,*,90,80" MinHeight="32" Background="Transparent">
+                                                    <Grid.Styles>
+                                                        <Style Selector="Grid:pointerover">
+                                                            <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}"/>
+                                                        </Style>
+                                                    </Grid.Styles>
+                                                    <TextBlock Grid.Column="0" Text="{Binding Activityid}"
+                                                               FontFamily="IBM Plex Mono, Consolas"
+                                                               Foreground="{StaticResource BrushTextMuted}"
+                                                               FontSize="11" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Startdate, StringFormat='{}{0:dd.MM.yyyy}'}"
+                                                               FontSize="11.5" VerticalAlignment="Center" Margin="4,0"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding Executantid, Converter={x:Static conv:EmployeeIdToNameConverter.Instance}}"
+                                                               Foreground="{StaticResource BrushTextSecondary}"
+                                                               FontSize="11.5" VerticalAlignment="Center" Margin="4,0"/>
+                                                    <TextBlock Grid.Column="3" Text="{Binding Employeepayment, StringFormat='{}{0:N0}'}"
+                                                               FontFamily="IBM Plex Mono, Consolas"
+                                                               FontSize="11.5" VerticalAlignment="Center" Margin="4,0"/>
+                                                </Grid>
+
+                                                <!-- Expanded detail -->
+                                                <Border IsVisible="{Binding $parent[ListBoxItem].IsSelected}"
+                                                        Background="{StaticResource BrushSurfaceAlt}"
+                                                        BorderThickness="3,0,0,0"
+                                                        BorderBrush="{StaticResource BrushAccent}"
+                                                        Padding="16,10,16,14">
+                                                    <StackPanel Spacing="10">
+                                                        <Button Classes="icon sm" HorizontalAlignment="Right" Margin="0,-4,0,0"
+                                                                ToolTip.Tip="Свиване"
+                                                                Command="{Binding $parent[UserControl].DataContext.ActivitiesDetail.DeselectActivityCommand}">
+                                                            <TextBlock Text="▲" FontSize="11" Foreground="{StaticResource BrushTextMuted}"/>
+                                                        </Button>
+                                                        <WrapPanel Orientation="Horizontal">
+                                                            <StackPanel Margin="0,0,20,6" Width="100">
+                                                                <TextBlock Text="ИД ДЕЙНОСТ" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Activityid, StringFormat='#{0}'}"
+                                                                           FontFamily="IBM Plex Mono, Consolas" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="100">
+                                                                <TextBlock Text="ИД ПОРЪЧКА" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Requestid}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="100">
+                                                                <TextBlock Text="ТИП" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Activitytypeid, Converter={x:Static conv:ActivityTypeIdToNameConverter.Instance}}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="120">
+                                                                <TextBlock Text="НАЧАЛНА ДАТА" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Startdate, StringFormat='{}{0:dd.MM.yyyy}'}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="120">
+                                                                <TextBlock Text="ОЧАКВАН КРАЙ" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Expectedduration, StringFormat='{}{0:dd.MM.yyyy}'}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="100">
+                                                                <TextBlock Text="ИЗПЪЛНИТЕЛ" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Executantid, Converter={x:Static conv:EmployeeIdToNameConverter.Instance}}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="100">
+                                                                <TextBlock Text="ПЛАЩАНЕ" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Employeepayment, StringFormat='{}{0:N0}'}"
+                                                                           FontFamily="IBM Plex Mono, Consolas" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="100">
+                                                                <TextBlock Text="ИД РОДИТЕЛ" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Parentactivityid}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                        </WrapPanel>
+                                                    </StackPanel>
+                                                </Border>
+                                                <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Grid>
+
+                            <GridSplitter Grid.Column="1" Width="6"
+                                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                          Background="{StaticResource BrushBorder}" ResizeDirection="Columns"/>
+
+                            <!-- ── Task Grid ── -->
+                            <Grid Grid.Column="2" RowDefinitions="Auto,Auto,*">
+                                <!-- Toolbar -->
+                                <Border Grid.Row="0"
+                                        Background="{StaticResource BrushSurfaceAlt}"
+                                        BorderThickness="0,0,0,1"
+                                        BorderBrush="{StaticResource BrushBorder}"
+                                        Padding="12,6">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <TextBlock Text="ЗАДАЧИ" FontSize="11" FontWeight="Bold"
+                                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                                            <Button Classes="icon sm" ToolTip.Tip="Нова задача"
+                                                    Command="{Binding ActivitiesDetail.AddTaskCommand}">
+                                                <TextBlock Text="+" FontSize="14" FontWeight="Bold"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                                <!-- Header -->
+                                <Grid Grid.Row="1" ColumnDefinitions="44,70,90,90,80,65"
+                                      Background="{StaticResource BrushSurfaceAlt}" Height="28">
+                                    <TextBlock Grid.Column="0" Text="#" FontSize="10" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                    <TextBlock Grid.Column="1" Text="СТАТУС" FontSize="10" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                                    <TextBlock Grid.Column="2" Text="НАЧАЛО" FontSize="10" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                                    <TextBlock Grid.Column="3" Text="КРАЙ" FontSize="10" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                                    <TextBlock Grid.Column="4" Text="ПЛАЩАНЕ" FontSize="10" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                                </Grid>
+                                <!-- Rows -->
+                                <ListBox Grid.Row="2"
+                                         ItemsSource="{Binding ActivitiesDetail.Tasks}"
+                                         SelectedItem="{Binding ActivitiesDetail.SelectedTask}"
+                                         Background="Transparent" BorderThickness="0" Padding="0">
+                                    <ListBox.Styles>
+                                        <Style Selector="ListBoxItem">
+                                            <Setter Property="Padding" Value="0"/>
+                                            <Setter Property="Margin" Value="0"/>
+                                        </Style>
+                                    </ListBox.Styles>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="dto:TaskDto">
+                                            <StackPanel>
+                                                <Grid ColumnDefinitions="44,70,90,90,80,65" MinHeight="32" Background="Transparent">
+                                                    <Grid.Styles>
+                                                        <Style Selector="Grid:pointerover">
+                                                            <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}"/>
+                                                        </Style>
+                                                    </Grid.Styles>
+                                                    <TextBlock Grid.Column="0" Text="{Binding Taskid}"
+                                                               FontFamily="IBM Plex Mono, Consolas"
+                                                               Foreground="{StaticResource BrushTextMuted}"
+                                                               FontSize="11" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Status}"
+                                                               FontSize="11.5" VerticalAlignment="Center" Margin="4,0"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding Startdate, StringFormat='{}{0:dd.MM.yyyy}'}"
+                                                               FontSize="11.5" VerticalAlignment="Center" Margin="4,0"/>
+                                                    <TextBlock Grid.Column="3" Text="{Binding Finishdate, StringFormat='{}{0:dd.MM.yyyy}'}"
+                                                               FontSize="11.5" VerticalAlignment="Center" Margin="4,0"/>
+                                                    <TextBlock Grid.Column="4" Text="{Binding Executantpayment, StringFormat='{}{0:N0}'}"
+                                                               FontFamily="IBM Plex Mono, Consolas"
+                                                               FontSize="11.5" VerticalAlignment="Center" Margin="4,0"/>
+                                                    <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="2"
+                                                                VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <Button Classes="icon sm" ToolTip.Tip="Редактиране на задача"
+                                                                Command="{Binding $parent[UserControl].DataContext.ActivitiesDetail.EditTaskCommand}"
+                                                                CommandParameter="{Binding}">
+                                                            <TextBlock Text="✏️" FontSize="10"/>
+                                                        </Button>
+                                                        <Button Classes="icon sm" ToolTip.Tip="Изтриване на задача"
+                                                                Command="{Binding $parent[UserControl].DataContext.ActivitiesDetail.DeleteTaskCommand}"
+                                                                CommandParameter="{Binding}">
+                                                            <TextBlock Text="🗑️" FontSize="10"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
+
+                                                <!-- Expanded detail -->
+                                                <Border IsVisible="{Binding $parent[ListBoxItem].IsSelected}"
+                                                        Background="{StaticResource BrushSurfaceAlt}"
+                                                        BorderThickness="3,0,0,0"
+                                                        BorderBrush="{StaticResource BrushAccent}"
+                                                        Padding="16,10,16,14">
+                                                    <StackPanel Spacing="10">
+                                                        <Button Classes="icon sm" HorizontalAlignment="Right" Margin="0,-4,0,0"
+                                                                ToolTip.Tip="Свиване"
+                                                                Command="{Binding $parent[UserControl].DataContext.ActivitiesDetail.DeselectTaskCommand}">
+                                                            <TextBlock Text="▲" FontSize="11" Foreground="{StaticResource BrushTextMuted}"/>
+                                                        </Button>
+                                                        <WrapPanel Orientation="Horizontal">
+                                                            <StackPanel Margin="0,0,20,6" Width="80">
+                                                                <TextBlock Text="ИД ЗАДАЧА" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Taskid, StringFormat='#{0}'}"
+                                                                           FontFamily="IBM Plex Mono, Consolas" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="80">
+                                                                <TextBlock Text="СТАТУС" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Status}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="80">
+                                                                <TextBlock Text="ИД ТИП" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Tasktypeid}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="100">
+                                                                <TextBlock Text="НАЧАЛО" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Startdate, StringFormat='{}{0:dd.MM.yyyy}'}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="100">
+                                                                <TextBlock Text="КРАЙ" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Finishdate, StringFormat='{}{0:dd.MM.yyyy}'}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="80">
+                                                                <TextBlock Text="ИЗПЪЛНИТЕЛ" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Executantid}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="80">
+                                                                <TextBlock Text="КОНТРОЛ" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Controlid}" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="80">
+                                                                <TextBlock Text="ПЛАЩАНЕ" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Executantpayment, StringFormat='{}{0:N0}'}"
+                                                                           FontFamily="IBM Plex Mono, Consolas" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="80">
+                                                                <TextBlock Text="ТАКСА" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Tax, StringFormat='{}{0:N0}'}"
+                                                                           FontFamily="IBM Plex Mono, Consolas" FontSize="11.5"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="180"
+                                                                        IsVisible="{Binding Comments, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                                                <TextBlock Text="КОМЕНТАРИ" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Comments}" FontSize="11.5" TextWrapping="Wrap"/>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0,0,20,6" Width="180"
+                                                                        IsVisible="{Binding Commenttax, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                                                <TextBlock Text="КОМЕНТАР ТАКСА" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                                <TextBlock Text="{Binding Commenttax}" FontSize="11.5" TextWrapping="Wrap"/>
+                                                            </StackPanel>
+                                                        </WrapPanel>
+                                                    </StackPanel>
+                                                </Border>
+                                                <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- ========== CLIENTS TAB ========== -->
+                    <TabItem Header="Клиенти">
+                        <Grid RowDefinitions="Auto,*">
+                            <!-- Toolbar -->
+                            <Border Grid.Row="0"
+                                    Background="{StaticResource BrushSurfaceAlt}"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{StaticResource BrushBorder}"
+                                    Padding="12,6">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Text="КЛИЕНТИ" FontSize="11" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="1" Classes="icon sm" ToolTip.Tip="Свързване на клиент"
+                                            Command="{Binding ClientsDetail.LinkClientCommand}">
+                                        <TextBlock Text="+" FontSize="14" FontWeight="Bold"/>
+                                    </Button>
+                                </Grid>
+                            </Border>
+
+                            <!-- Client rows -->
+                            <ScrollViewer Grid.Row="1">
+                                <ItemsControl ItemsSource="{Binding ClientsDetail.Clients}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="dto:ClientDto">
+                                            <Border Padding="12,8"
+                                                    BorderThickness="0,0,0,1"
+                                                    BorderBrush="{StaticResource BrushBorder}">
+                                                <Grid ColumnDefinitions="*,Auto,Auto">
+                                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                        <TextBlock FontWeight="SemiBold" FontSize="12.5">
+                                                            <Run Text="{Binding Firstname}"/>
+                                                            <Run Text=" "/>
+                                                            <Run Text="{Binding Lastname}"/>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding Phone}"
+                                                                   FontSize="11"
+                                                                   Foreground="{StaticResource BrushTextMuted}"
+                                                                   Margin="0,2,0,0"/>
+                                                    </StackPanel>
+                                                    <Button Grid.Column="1" Classes="icon sm"
+                                                            ToolTip.Tip="Редактиране"
+                                                            Margin="4,0"
+                                                            Command="{Binding $parent[UserControl].DataContext.ClientsDetail.EditClientCommand}"
+                                                            CommandParameter="{Binding}">
+                                                        <TextBlock Text="&#9998;" FontSize="12"/>
+                                                    </Button>
+                                                    <Button Grid.Column="2" Classes="icon sm"
+                                                            ToolTip.Tip="Премахване от поръчка"
+                                                            Command="{Binding $parent[UserControl].DataContext.ClientsDetail.UnlinkClientCommand}"
+                                                            CommandParameter="{Binding}">
+                                                        <TextBlock Text="&#8722;" FontSize="14" FontWeight="Bold"
+                                                                   Foreground="#b83232"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- ========== PLOTS & DOCS TAB ========== -->
+                    <TabItem Header="Имоти и документи">
+                        <Grid RowDefinitions="Auto,*">
+                            <!-- Toolbar -->
+                            <Border Grid.Row="0"
+                                    Background="{StaticResource BrushSurfaceAlt}"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{StaticResource BrushBorder}"
+                                    Padding="12,6">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Text="ИМОТИ И ДОКУМЕНТИ" FontSize="11" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="1" Classes="icon sm" ToolTip.Tip="Добавяне на имот"
+                                            Command="{Binding PlotsDetail.AddPlotCommand}">
+                                        <TextBlock Text="+" FontSize="14" FontWeight="Bold"/>
+                                    </Button>
+                                </Grid>
+                            </Border>
+
+                            <!-- Plot cards list -->
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding PlotsDetail.PlotCards}" Margin="12,8">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="vm:PlotCardViewModel">
+                                            <Border Background="{StaticResource BrushSurface}"
+                                                    BorderBrush="{StaticResource BrushBorder}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="8"
+                                                    Margin="0,0,0,10"
+                                                    Padding="0">
+                                                <StackPanel>
+                                                    <!-- Plot header -->
+                                                    <Border Background="{StaticResource BrushSurfaceAlt}"
+                                                            CornerRadius="8,8,0,0"
+                                                            Padding="14,10">
+                                                        <Grid ColumnDefinitions="Auto,*,Auto">
+                                                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                                                                <TextBlock Text="&#x1F5FA;" FontSize="16" VerticalAlignment="Center"/>
+                                                                <StackPanel VerticalAlignment="Center">
+                                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                        <TextBlock Text="{Binding Plotnumber, StringFormat='Имот {0}'}"
+                                                                                   FontWeight="Bold" FontSize="13"/>
+                                                                        <TextBlock Text="{Binding Designation}"
+                                                                                   Foreground="{StaticResource BrushTextMuted}"
+                                                                                   FontSize="11" VerticalAlignment="Center"/>
+                                                                    </StackPanel>
+                                                                    <TextBlock Text="{Binding LocationSummary}"
+                                                                               Foreground="{StaticResource BrushTextSecondary}"
+                                                                               FontSize="11" Margin="0,2,0,0"/>
+                                                                </StackPanel>
+                                                            </StackPanel>
+
+                                                            <!-- Shared warning badge -->
+                                                            <Border Grid.Column="1"
+                                                                    IsVisible="{Binding IsShared}"
+                                                                    Background="#FFF3CD"
+                                                                    CornerRadius="10"
+                                                                    Padding="8,3"
+                                                                    Margin="10,0"
+                                                                    VerticalAlignment="Center"
+                                                                    HorizontalAlignment="Left">
+                                                                <TextBlock Text="Споделен между поръчки"
+                                                                           FontSize="10" Foreground="#856404"/>
+                                                            </Border>
+
+                                                            <!-- Actions -->
+                                                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2"
+                                                                        VerticalAlignment="Center">
+                                                                <Button Classes="icon sm" ToolTip.Tip="Добавяне на документ"
+                                                                        Command="{Binding $parent[UserControl].DataContext.PlotsDetail.AddDocumentCommand}"
+                                                                        CommandParameter="{Binding}">
+                                                                    <TextBlock Text="+" FontSize="13" FontWeight="Bold"/>
+                                                                </Button>
+                                                                <Button Classes="icon sm" ToolTip.Tip="Редактиране на имот"
+                                                                        Command="{Binding $parent[UserControl].DataContext.PlotsDetail.EditPlotCommand}"
+                                                                        CommandParameter="{Binding}">
+                                                                    <TextBlock Text="&#x270F;&#xFE0F;" FontSize="11"/>
+                                                                </Button>
+                                                                <Button Classes="icon sm" ToolTip.Tip="Изтриване на имот"
+                                                                        Command="{Binding $parent[UserControl].DataContext.PlotsDetail.DeletePlotCommand}"
+                                                                        CommandParameter="{Binding}">
+                                                                    <TextBlock Text="&#x1F5D1;&#xFE0F;" FontSize="11"/>
+                                                                </Button>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+
+                                                    <!-- Plot meta -->
+                                                    <Border Padding="14,6"
+                                                            IsVisible="{Binding StreetSummary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                                        <StackPanel Orientation="Horizontal" Spacing="16">
+                                                            <StackPanel Orientation="Horizontal" Spacing="4"
+                                                                        IsVisible="{Binding Regulatedplotnumber, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                                                <TextBlock Text="Рег.:" FontSize="10" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center"/>
+                                                                <TextBlock Text="{Binding Regulatedplotnumber}" FontSize="11" VerticalAlignment="Center"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Spacing="4"
+                                                                        IsVisible="{Binding StreetSummary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                                                <TextBlock Text="Улица:" FontSize="10" FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center"/>
+                                                                <TextBlock Text="{Binding StreetSummary}" FontSize="11" VerticalAlignment="Center"/>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Border>
+
+                                                    <!-- Documents list -->
+                                                    <ItemsControl ItemsSource="{Binding Documents}" Margin="0,0,0,6">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate DataType="dto:DocumentsofownershipDto">
+                                                                <Border Padding="14,6,14,6"
+                                                                        BorderThickness="0,1,0,0"
+                                                                        BorderBrush="{StaticResource BrushBorder}">
+                                                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                                                        <TextBlock Grid.Column="0" Text="&#x1F4C4;"
+                                                                                   FontSize="13" VerticalAlignment="Center"
+                                                                                   Margin="0,0,8,0"/>
+                                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                                            <TextBlock FontSize="12">
+                                                                                <Run Text="{Binding Typeofdocument}" FontWeight="SemiBold"/>
+                                                                                <Run Text=" #"/>
+                                                                                <Run Text="{Binding Numberofdocument}"/>
+                                                                            </TextBlock>
+                                                                            <TextBlock FontSize="10.5"
+                                                                                       Foreground="{StaticResource BrushTextMuted}"
+                                                                                       Margin="0,2,0,0">
+                                                                                <Run Text="{Binding Issuer}"/>
+                                                                                <Run Text=" | "/>
+                                                                                <Run Text="{Binding Dateofissuing, StringFormat='{}{0:dd.MM.yyyy}'}"/>
+                                                                                <Run Text=" | "/>
+                                                                                <Run Text="{Binding Typeofownership}"/>
+                                                                            </TextBlock>
+                                                                        </StackPanel>
+                                                                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2"
+                                                                                    VerticalAlignment="Center">
+                                                                            <Button Classes="icon sm" ToolTip.Tip="Редактиране на документ"
+                                                                                    Command="{Binding $parent[UserControl].DataContext.PlotsDetail.EditDocumentCommand}"
+                                                                                    CommandParameter="{Binding}">
+                                                                                <TextBlock Text="&#x270F;&#xFE0F;" FontSize="10"/>
+                                                                            </Button>
+                                                                            <Button Classes="icon sm" ToolTip.Tip="Изтриване на документ"
+                                                                                    Command="{Binding $parent[UserControl].DataContext.PlotsDetail.DeleteDocumentCommand}"
+                                                                                    CommandParameter="{Binding}">
+                                                                                <TextBlock Text="&#x1F5D1;&#xFE0F;" FontSize="10"/>
+                                                                            </Button>
+                                                                        </StackPanel>
+                                                                    </Grid>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+
+                                                    <!-- Empty state for documents -->
+                                                    <TextBlock Text="Няма свързани документи"
+                                                               FontSize="11"
+                                                               Foreground="{StaticResource BrushTextMuted}"
+                                                               Margin="14,4,14,10"
+                                                               IsVisible="{Binding !Documents.Count}"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- ========== INVOICES TAB ========== -->
+                    <TabItem Header="Фактури">
+                        <Grid RowDefinitions="Auto,*">
+                            <!-- Toolbar -->
+                            <Border Grid.Row="0"
+                                    Background="{StaticResource BrushSurfaceAlt}"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{StaticResource BrushBorder}"
+                                    Padding="12,6">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Text="ФАКТУРИ" FontSize="11" FontWeight="Bold"
+                                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="1" Classes="icon sm" ToolTip.Tip="Добавяне на фактура"
+                                            Command="{Binding InvoicesDetail.AddInvoiceCommand}">
+                                        <TextBlock Text="+" FontSize="14" FontWeight="Bold"/>
+                                    </Button>
+                                </Grid>
+                            </Border>
+
+                            <!-- Invoice rows -->
+                            <ScrollViewer Grid.Row="1">
+                                <ItemsControl ItemsSource="{Binding InvoicesDetail.Invoices}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="dto:InvoiceDto">
+                                            <Border Padding="12,8"
+                                                    BorderThickness="0,0,0,1"
+                                                    BorderBrush="{StaticResource BrushBorder}">
+                                                <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Number}"
+                                                                   FontWeight="SemiBold" FontSize="12.5"/>
+                                                        <TextBlock Text="{Binding Invoiceid, StringFormat='Фактура #{0}'}"
+                                                                   FontSize="11"
+                                                                   Foreground="{StaticResource BrushTextMuted}"
+                                                                   Margin="0,2,0,0"/>
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding Sum, StringFormat='{}{0:N2} лв.'}"
+                                                               FontFamily="IBM Plex Mono, Consolas"
+                                                               FontSize="12.5"
+                                                               FontWeight="SemiBold"
+                                                               VerticalAlignment="Center"
+                                                               Margin="8,0"/>
+                                                    <Button Grid.Column="2" Classes="icon sm"
+                                                            ToolTip.Tip="Редактиране"
+                                                            Margin="4,0"
+                                                            Command="{Binding $parent[UserControl].DataContext.InvoicesDetail.EditInvoiceCommand}"
+                                                            CommandParameter="{Binding}">
+                                                        <TextBlock Text="&#9998;" FontSize="12"/>
+                                                    </Button>
+                                                    <Button Grid.Column="3" Classes="icon sm"
+                                                            ToolTip.Tip="Изтриване на фактура"
+                                                            Command="{Binding $parent[UserControl].DataContext.InvoicesDetail.DeleteInvoiceCommand}"
+                                                            CommandParameter="{Binding}">
+                                                        <TextBlock Text="&#8722;" FontSize="14" FontWeight="Bold"
+                                                                   Foreground="#b83232"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,144 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Wolf.Desktop.ViewModels"
+        xmlns:conv="using:Wolf.Desktop.Converters"
+        xmlns:idc="clr-namespace:Dock.Avalonia.Controls;assembly=Dock.Avalonia"
+        x:Class="Wolf.Desktop.Views.MainWindow"
+        x:CompileBindings="False"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Wolf"
+        Width="1280" Height="800"
+        MinWidth="900" MinHeight="600"
+        Background="{StaticResource BrushBg}">
+
+    <Grid ColumnDefinitions="220,*">
+
+        <!-- ========== SIDEBAR ========== -->
+        <Border Grid.Column="0"
+                Background="{StaticResource BrushSidebarBg}">
+            <DockPanel>
+
+                <!-- Logo -->
+                <Border DockPanel.Dock="Top"
+                        Padding="20,18"
+                        BorderThickness="0,0,0,1"
+                        BorderBrush="#26ffffff">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Border Width="32" Height="32" CornerRadius="8"
+                                Background="{StaticResource BrushAccent}">
+                            <TextBlock Text="W" FontSize="18" FontWeight="Bold"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="Wolf" FontSize="17" FontWeight="Bold"
+                                   Foreground="White"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Footer — profile + logout -->
+                <Border DockPanel.Dock="Bottom"
+                        BorderThickness="0,1,0,0"
+                        BorderBrush="#26ffffff"
+                        Padding="0">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Button Grid.Column="0"
+                                Command="{Binding OpenProfileCommand}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                CornerRadius="0"
+                                Padding="14"
+                                HorizontalContentAlignment="Left"
+                                HorizontalAlignment="Stretch">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                    <Setter Property="Background" Value="#15ffffff"/>
+                                </Style>
+                            </Button.Styles>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Border Width="30" Height="30" CornerRadius="15"
+                                        Background="{StaticResource BrushAccent}">
+                                    <TextBlock Text="{Binding CurrentUserInitials}"
+                                               FontSize="11" FontWeight="Bold"
+                                               Foreground="White"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding CurrentUserDisplayName}"
+                                               FontSize="12" FontWeight="SemiBold"
+                                               Foreground="White"/>
+                                    <TextBlock Text="{Binding CurrentUserRole}"
+                                               FontSize="10"
+                                               Foreground="#59ffffff"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="1"
+                                Command="{Binding LogoutCommand}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                CornerRadius="0"
+                                Padding="10,0"
+                                ToolTip.Tip="Изход"
+                                VerticalAlignment="Stretch">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                    <Setter Property="Background" Value="#20ff6b6b"/>
+                                </Style>
+                            </Button.Styles>
+                            <TextBlock Text="&#x23FB;" FontSize="16"
+                                       Foreground="#99ffffff"
+                                       VerticalAlignment="Center"/>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- Nav Items -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding NavItems}" Margin="8,8">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:NavItemViewModel">
+                                <Button Command="{Binding NavigateCommand}"
+                                        HorizontalContentAlignment="Left"
+                                        HorizontalAlignment="Stretch"
+                                        Padding="14,9"
+                                        Margin="0,1"
+                                        CornerRadius="6"
+                                        BorderThickness="0"
+                                        Background="{Binding IsActive, Converter={x:Static conv:NavItemBgConverter.Instance}}">
+                                    <Grid ColumnDefinitions="20,*,Auto">
+                                        <TextBlock Grid.Column="0" Text="{Binding Icon}"
+                                                   FontSize="14"
+                                                   Foreground="#ccc9bfaf"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Label}"
+                                                   FontSize="13" FontWeight="Medium"
+                                                   Foreground="{StaticResource BrushSidebarText}"
+                                                   VerticalAlignment="Center"
+                                                   Margin="8,0,0,0"/>
+                                        <Border Grid.Column="2"
+                                                Background="#1fffffff"
+                                                CornerRadius="10"
+                                                Padding="6,1"
+                                                IsVisible="{Binding Badge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                            <TextBlock Text="{Binding Badge}"
+                                                       FontSize="10" FontWeight="SemiBold"
+                                                       Foreground="#99ffffff"
+                                                       FontFamily="IBM Plex Mono, Consolas"/>
+                                        </Border>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- ========== MAIN — Dockable Tab Area ========== -->
+        <idc:DockControl Grid.Column="1"
+                         Layout="{Binding Layout}"/>
+    </Grid>
+</Window>

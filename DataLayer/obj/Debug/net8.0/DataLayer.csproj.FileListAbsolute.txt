@@ -1,0 +1,14 @@
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/bin/Debug/net8.0/DataLayer.deps.json
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/bin/Debug/net8.0/DataLayer.runtimeconfig.json
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/bin/Debug/net8.0/DataLayer.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/bin/Debug/net8.0/DataLayer.pdb
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.csproj.AssemblyReference.cache
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.GeneratedMSBuildEditorConfig.editorconfig
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.AssemblyInfoInputs.cache
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.AssemblyInfo.cs
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.csproj.CoreCompileInputs.cache
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/refint/DataLayer.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.pdb
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.genruntimeconfig.cache
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/ref/DataLayer.dll

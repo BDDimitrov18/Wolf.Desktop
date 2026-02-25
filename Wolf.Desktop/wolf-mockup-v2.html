@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wolf Desktop — Mockup v2</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ec;
+    --surface: #ffffff;
+    --surface-alt: #faf8f5;
+    --border: #e2ddd5;
+    --border-strong: #cdc6ba;
+    --text: #2c2418;
+    --text-secondary: #7a6f60;
+    --text-muted: #a89e8e;
+    --accent: #c45d2c;
+    --accent-hover: #a84e24;
+    --accent-light: #fdf0ea;
+    --accent-border: #f0c4ab;
+    --green: #3a7d44;
+    --green-bg: #edf5ee;
+    --yellow: #b8860b;
+    --yellow-bg: #fdf6e3;
+    --blue: #3b6fa0;
+    --blue-bg: #edf3f9;
+    --red: #b83232;
+    --red-bg: #fceaea;
+    --sidebar-bg: #2c2418;
+    --sidebar-text: #c9bfaf;
+    --sidebar-active: #c45d2c;
+    --sidebar-hover: #3d3226;
+    --nav-width: 220px;
+    --radius: 6px;
+    --radius-lg: 10px;
+    --shadow-sm: 0 1px 3px rgba(44,36,24,0.06);
+    --shadow-md: 0 4px 16px rgba(44,36,24,0.1);
+    --shadow-lg: 0 8px 32px rgba(44,36,24,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* ===================== SIDEBAR ===================== */
+  .sidebar {
+    width: var(--nav-width);
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .sidebar-logo .wolf-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: white;
+    font-weight: 700;
+  }
+
+  .sidebar-logo span {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+
+  .sidebar-section {
+    padding: 16px 12px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  .sidebar nav {
+    flex: 1;
+    padding: 4px 8px;
+    overflow-y: auto;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    border-radius: var(--radius);
+    color: var(--sidebar-text);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    margin-bottom: 1px;
+    user-select: none;
+  }
+
+  .nav-item:hover { background: var(--sidebar-hover); color: #fff; }
+  .nav-item.active { background: var(--sidebar-active); color: #fff; }
+
+  .nav-item .icon { width: 18px; text-align: center; font-size: 14px; opacity: 0.8; }
+
+  .nav-item .badge {
+    margin-left: auto;
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.6);
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .nav-item.active .badge { background: rgba(255,255,255,0.2); color: #fff; }
+
+  .sidebar-footer {
+    padding: 14px 16px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sidebar-footer .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .sidebar-footer .user-name { color: #fff; font-size: 12px; font-weight: 600; }
+  .sidebar-footer .user-role { color: rgba(255,255,255,0.35); font-size: 10px; }
+
+  /* ===================== MAIN ===================== */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ===================== TAB BAR (browser-style) ===================== */
+  .tab-bar {
+    display: flex;
+    align-items: flex-end;
+    background: var(--bg);
+    padding: 8px 16px 0;
+    gap: 2px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+
+  .main-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    white-space: nowrap;
+    max-width: 220px;
+    position: relative;
+    bottom: -1px;
+  }
+
+  .main-tab:hover { background: var(--surface); color: var(--text); }
+
+  .main-tab.active {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+    z-index: 1;
+  }
+
+  .main-tab .tab-close {
+    width: 18px;
+    height: 18px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 3px;
+    color: var(--text-muted);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    transition: all 0.1s;
+    flex-shrink: 0;
+  }
+
+  .main-tab .tab-close:hover { background: var(--red-bg); color: var(--red); }
+  .main-tab .tab-label { overflow: hidden; text-overflow: ellipsis; }
+  .main-tab .tab-icon { flex-shrink: 0; font-size: 12px; }
+
+  .main-tab.unsaved .tab-label::after {
+    content: ' ●';
+    color: var(--accent);
+    font-size: 10px;
+  }
+
+  /* ===================== PAGE VIEWS ===================== */
+  .page-view {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .page-view.active { display: flex; }
+
+  /* Top bar per page */
+  .topbar {
+    height: 52px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  .topbar h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+
+  .search-box {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    width: 260px;
+    transition: all 0.2s;
+  }
+
+  .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+  .search-box input { border: none; background: none; outline: none; font-family: inherit; font-size: 12px; color: var(--text); width: 100%; }
+  .search-box input::placeholder { color: var(--text-muted); }
+
+  /* ===================== BUTTONS ===================== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .btn:hover { background: var(--surface-alt); border-color: var(--border-strong); }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-danger { color: var(--red); border-color: #e8c4c4; }
+  .btn-danger:hover { background: var(--red-bg); }
+  .btn-sm { padding: 4px 10px; font-size: 11px; }
+  .btn-lg { padding: 10px 22px; font-size: 13px; }
+
+  /* ===================== TOOLBAR ===================== */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    padding: 14px 24px;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .filter-pills { display: flex; gap: 4px; margin-left: 8px; }
+
+  .pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .pill:hover { background: var(--surface); }
+  .pill.active { background: var(--accent-light); color: var(--accent); border-color: var(--accent-border); }
+  .toolbar-spacer { flex: 1; }
+
+  .record-count {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ===================== TABLE ===================== */
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  thead { position: sticky; top: 0; z-index: 2; }
+
+  thead th {
+    background: var(--surface-alt);
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  tbody tr { cursor: pointer; transition: background 0.1s; }
+  tbody tr:hover { background: var(--surface-alt); }
+  tbody tr.selected { background: var(--accent-light); }
+
+  tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .status-active { background: var(--green-bg); color: var(--green); }
+  .status-pending { background: var(--yellow-bg); color: var(--yellow); }
+  .status-done { background: var(--blue-bg); color: var(--blue); }
+  .status-cancelled { background: var(--red-bg); color: var(--red); }
+
+  .row-actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.15s; }
+  tr:hover .row-actions { opacity: 1; }
+
+  .row-action-btn {
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 4px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: all 0.1s;
+  }
+
+  .row-action-btn:hover { background: var(--border); color: var(--text); }
+  .row-action-btn.delete:hover { background: var(--red-bg); color: var(--red); }
+
+  /* ===================== EXPAND ROW ===================== */
+  .expand-toggle {
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    border-radius: 4px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .expand-toggle:hover { background: var(--surface-alt); border-color: var(--border-strong); color: var(--text); }
+  .expand-toggle.open { background: var(--accent-light); border-color: var(--accent-border); color: var(--accent); }
+
+  .expand-row { display: none; }
+  .expand-row.open { display: table-row; }
+  .expand-row td { padding: 0; border-bottom: 1px solid var(--border); }
+
+  .expand-content {
+    background: var(--surface-alt);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    animation: expandIn 0.2s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 500px; }
+  }
+
+  .prop-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px 24px;
+  }
+
+  .prop-item { }
+
+  .prop-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+
+  .prop-value {
+    font-size: 12.5px;
+    color: var(--text);
+  }
+
+  .prop-value.mono { font-family: 'IBM Plex Mono', monospace; }
+  .prop-value.link { color: var(--blue); cursor: pointer; }
+  .prop-value.link:hover { text-decoration: underline; }
+
+  .expand-actions {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+
+  /* ===================== SPLIT PANEL ===================== */
+  .split-view { display: flex; flex-direction: column; height: 100%; }
+
+  .top-panel {
+    flex: 0 0 45%;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-bottom: 3px solid var(--border);
+  }
+
+  .bottom-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* ===================== DETAIL TABS ===================== */
+  .detail-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 24px 0;
+    gap: 0;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .detail-tab {
+    padding: 10px 18px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+    position: relative;
+    bottom: -1px;
+  }
+
+  .detail-tab:hover { color: var(--text); }
+  .detail-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .detail-tab .tab-count {
+    font-size: 10px;
+    background: var(--border);
+    color: var(--text-secondary);
+    padding: 0 6px;
+    border-radius: 8px;
+    margin-left: 5px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .detail-tab.active .tab-count { background: var(--accent-light); color: var(--accent); }
+
+  /* ===================== MASTER-DETAIL ===================== */
+  .master-detail { flex: 1; display: flex; overflow: hidden; min-height: 0; }
+
+  .master-pane {
+    width: 45%;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .detail-pane { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .pane-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 8px 14px;
+    gap: 8px;
+    flex-shrink: 0;
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pane-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+  }
+
+  .pane-scroll { flex: 1; overflow-y: auto; }
+
+  /* ===================== CREATE/EDIT FULL PAGE ===================== */
+  .form-page {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+  }
+
+  .form-page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .form-page-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .form-page-header .form-id {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--surface-alt);
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .form-section {
+    margin-bottom: 28px;
+  }
+
+  .form-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-section-title .section-icon { font-size: 14px; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px 20px;
+  }
+
+  .form-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .form-grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .span-2 { grid-column: span 2; }
+  .span-3 { grid-column: span 3; }
+
+  .form-group { }
+
+  .form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface);
+    transition: all 0.15s;
+    outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-light);
+  }
+
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  .form-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding: 18px 32px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+    flex-shrink: 0;
+  }
+
+  /* ===================== PLOTS + DOCS ===================== */
+  .plot-card {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  .plot-card:hover { background: var(--surface-alt); }
+
+  .plot-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 12.5px;
+    margin-bottom: 8px;
+  }
+
+  .plot-header .plot-icon { color: var(--green); font-size: 14px; }
+
+  .plot-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+
+  .doc-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px 5px 22px;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.1s;
+    margin: 1px 0;
+  }
+
+  .doc-item:hover { background: var(--blue-bg); }
+
+  .doc-item .doc-icon { color: var(--blue); flex-shrink: 0; }
+
+  .doc-link { flex: 1; }
+  .doc-item:hover .doc-link { color: var(--blue); }
+
+  .doc-actions {
+    display: flex;
+    gap: 1px;
+    opacity: 0;
+    transition: opacity 0.1s;
+    flex-shrink: 0;
+  }
+
+  .doc-item:hover .doc-actions { opacity: 1; }
+
+  .shared-warning {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--yellow);
+    background: var(--yellow-bg);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 22px;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+
+  /* ===================== MODAL ===================== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(44, 36, 24, 0.35);
+    z-index: 300;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 380px;
+    overflow: hidden;
+    animation: modalIn 0.2s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    padding: 20px 24px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .modal-header .modal-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .modal-header h3 { font-size: 15px; font-weight: 700; }
+
+  .modal-body {
+    padding: 12px 24px 24px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .modal-footer {
+    padding: 14px 24px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+  }
+
+  /* ===================== DOC PREVIEW MODAL ===================== */
+  .doc-preview-modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 580px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: modalIn 0.2s ease;
+  }
+
+  .doc-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .doc-preview-header h3 { font-size: 14px; font-weight: 700; }
+  .doc-preview-icon { font-size: 18px; }
+
+  .doc-preview-body {
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  /* ===================== SCROLLBAR ===================== */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<!-- ============ SIDEBAR ============ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="wolf-icon">W</div>
+    <span>Wolf</span>
+  </div>
+
+  <div class="sidebar-section">Main</div>
+  <nav>
+    <div class="nav-item" onclick="setNav(this)"><span class="icon">📊</span> Dashboard</div>
+    <div class="nav-item active" onclick="setNav(this)"><span class="icon">📋</span> Orders <span class="badge">24</span></div>
+    <div class="nav-item" onclick="setNav(this)"><span class="icon">🗺️</span> Plots <span class="badge">156</span></div>
+    <div class="nav-item" onclick="setNav(this)"><span class="icon">📄</span> Documents</div>
+    <div class="nav-item" onclick="setNav(this)"><span class="icon">👥</span> Clients <span class="badge">89</span></div>
+    <div class="sidebar-section" style="padding-top: 20px;">Management</div>
+    <div class="nav-item" onclick="setNav(this)"><span class="icon">👷</span> Employees</div>
+    <div class="nav-item" onclick="setNav(this)"><span class="icon">💰</span> Invoices</div>
+    <div class="sidebar-section" style="padding-top: 20px;">Settings</div>
+    <div class="nav-item" onclick="setNav(this)"><span class="icon">⚙️</span> Configuration</div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="avatar">BD</div>
+    <div>
+      <div class="user-name">Bozhidar D.</div>
+      <div class="user-role">Administrator</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ============ MAIN ============ -->
+<div class="main">
+
+  <!-- ============ TAB BAR ============ -->
+  <div class="tab-bar" id="tab-bar">
+    <div class="main-tab active" data-page="orders" onclick="switchPage('orders', this)">
+      <span class="tab-icon">📋</span>
+      <span class="tab-label">Orders</span>
+    </div>
+    <!-- edit/create tabs injected here by JS -->
+  </div>
+
+  <!-- ============ PAGE: ORDERS LIST ============ -->
+  <div class="page-view active" id="page-orders">
+    <div class="topbar">
+      <h1>Orders</h1>
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Search orders, clients, plots...">
+      </div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+      <div class="split-view">
+        <!-- TOP: ORDER LIST -->
+        <div class="top-panel">
+          <div class="toolbar">
+            <button class="btn btn-primary" onclick="openEditPage('create')">+ New Order</button>
+            <div class="filter-pills">
+              <span class="pill active" onclick="setPill(this)">All</span>
+              <span class="pill" onclick="setPill(this)">Active</span>
+              <span class="pill" onclick="setPill(this)">Pending</span>
+              <span class="pill" onclick="setPill(this)">Done</span>
+            </div>
+            <div class="toolbar-spacer"></div>
+            <span class="record-count">24 orders</span>
+          </div>
+
+          <div style="flex:1; overflow:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:36px"></th>
+                  <th style="width:44px">#</th>
+                  <th style="width:22%">Order Name</th>
+                  <th style="width:80px">Status</th>
+                  <th style="width:13%">Client</th>
+                  <th style="width:10%">Creator</th>
+                  <th style="width:70px">Price</th>
+                  <th style="width:80px">Created</th>
+                  <th style="width:65px"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Order 101 -->
+                <tr onclick="selectOrder(this)">
+                  <td><button class="expand-toggle" onclick="event.stopPropagation(); toggleExpand('exp-101', this)">▸</button></td>
+                  <td style="font-family:'IBM Plex Mono'; color:var(--text-muted)">101</td>
+                  <td style="font-weight:600">Geodetic Survey — Lozenets</td>
+                  <td><span class="status-badge status-active">● Active</span></td>
+                  <td>Ivan Petrov</td>
+                  <td>B. Dimitrov</td>
+                  <td style="font-family:'IBM Plex Mono'">5,200</td>
+                  <td style="color:var(--text-muted)">12.01.2025</td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit', 101)">✏️</button>
+                      <button class="row-action-btn delete" onclick="event.stopPropagation(); openModal()">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="expand-row" id="exp-101">
+                  <td colspan="9">
+                    <div class="expand-content">
+                      <div class="prop-grid">
+                        <div class="prop-item"><div class="prop-label">Order ID</div><div class="prop-value mono">ORD-101</div></div>
+                        <div class="prop-item"><div class="prop-label">Order Name</div><div class="prop-value">Geodetic Survey — Lozenets</div></div>
+                        <div class="prop-item"><div class="prop-label">Status</div><div class="prop-value"><span class="status-badge status-active">● Active</span></div></div>
+                        <div class="prop-item"><div class="prop-label">Created</div><div class="prop-value mono">12.01.2025</div></div>
+                        <div class="prop-item"><div class="prop-label">Client</div><div class="prop-value link">Ivan Petrov</div></div>
+                        <div class="prop-item"><div class="prop-label">Creator</div><div class="prop-value">B. Dimitrov</div></div>
+                        <div class="prop-item"><div class="prop-label">Price</div><div class="prop-value mono">5,200 BGN</div></div>
+                        <div class="prop-item"><div class="prop-label">Advance</div><div class="prop-value mono">2,500 BGN</div></div>
+                        <div class="prop-item"><div class="prop-label">Payment Status</div><div class="prop-value"><span class="status-badge status-pending">● Partial</span></div></div>
+                        <div class="prop-item"><div class="prop-label">Activities</div><div class="prop-value mono">3</div></div>
+                        <div class="prop-item"><div class="prop-label">Plots</div><div class="prop-value mono">2</div></div>
+                        <div class="prop-item"><div class="prop-label">Supervisor</div><div class="prop-value">S. Georgiev</div></div>
+                        <div class="prop-item span-2"><div class="prop-label">Comments</div><div class="prop-value">Client requests expedited processing. Initial survey completed on site.</div></div>
+                        <div class="prop-item span-2"><div class="prop-label">Source / Referral</div><div class="prop-value">Referred by Notary Office Stoyanova</div></div>
+                      </div>
+                      <div class="expand-actions">
+                        <button class="btn btn-sm" onclick="openEditPage('edit', 101)">✏️ Edit Order</button>
+                        <button class="btn btn-sm btn-danger" onclick="openModal()">🗑️ Delete</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Order 102 -->
+                <tr class="selected" onclick="selectOrder(this)">
+                  <td><button class="expand-toggle" onclick="event.stopPropagation(); toggleExpand('exp-102', this)">▸</button></td>
+                  <td style="font-family:'IBM Plex Mono'; color:var(--text-muted)">102</td>
+                  <td style="font-weight:600">Property Transfer — Vitosha</td>
+                  <td><span class="status-badge status-pending">● Pending</span></td>
+                  <td>Maria Ivanova</td>
+                  <td>S. Georgiev</td>
+                  <td style="font-family:'IBM Plex Mono'">3,800</td>
+                  <td style="color:var(--text-muted)">15.01.2025</td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit', 102)">✏️</button>
+                      <button class="row-action-btn delete" onclick="event.stopPropagation(); openModal()">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="expand-row" id="exp-102">
+                  <td colspan="9">
+                    <div class="expand-content">
+                      <div class="prop-grid">
+                        <div class="prop-item"><div class="prop-label">Order ID</div><div class="prop-value mono">ORD-102</div></div>
+                        <div class="prop-item"><div class="prop-label">Order Name</div><div class="prop-value">Property Transfer — Vitosha</div></div>
+                        <div class="prop-item"><div class="prop-label">Status</div><div class="prop-value"><span class="status-badge status-pending">● Pending</span></div></div>
+                        <div class="prop-item"><div class="prop-label">Created</div><div class="prop-value mono">15.01.2025</div></div>
+                        <div class="prop-item"><div class="prop-label">Client</div><div class="prop-value link">Maria Ivanova</div></div>
+                        <div class="prop-item"><div class="prop-label">Creator</div><div class="prop-value">S. Georgiev</div></div>
+                        <div class="prop-item"><div class="prop-label">Price</div><div class="prop-value mono">3,800 BGN</div></div>
+                        <div class="prop-item"><div class="prop-label">Advance</div><div class="prop-value mono">1,500 BGN</div></div>
+                        <div class="prop-item"><div class="prop-label">Payment Status</div><div class="prop-value"><span class="status-badge status-pending">● Partial</span></div></div>
+                        <div class="prop-item"><div class="prop-label">Activities</div><div class="prop-value mono">3</div></div>
+                        <div class="prop-item"><div class="prop-label">Plots</div><div class="prop-value mono">2</div></div>
+                        <div class="prop-item"><div class="prop-label">Supervisor</div><div class="prop-value">B. Dimitrov</div></div>
+                        <div class="prop-item span-2"><div class="prop-label">Comments</div><div class="prop-value">Power of attorney pending from notary. Client available for signing after 20.01.</div></div>
+                        <div class="prop-item span-2"><div class="prop-label">Source / Referral</div><div class="prop-value">Direct inquiry — website contact form</div></div>
+                      </div>
+                      <div class="expand-actions">
+                        <button class="btn btn-sm" onclick="openEditPage('edit', 102)">✏️ Edit Order</button>
+                        <button class="btn btn-sm btn-danger" onclick="openModal()">🗑️ Delete</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Order 103 -->
+                <tr onclick="selectOrder(this)">
+                  <td><button class="expand-toggle" onclick="event.stopPropagation(); toggleExpand('exp-103', this)">▸</button></td>
+                  <td style="font-family:'IBM Plex Mono'; color:var(--text-muted)">103</td>
+                  <td style="font-weight:600">Land Division — Mladost</td>
+                  <td><span class="status-badge status-done">● Done</span></td>
+                  <td>Georgi Todorov</td>
+                  <td>B. Dimitrov</td>
+                  <td style="font-family:'IBM Plex Mono'">2,100</td>
+                  <td style="color:var(--text-muted)">18.01.2025</td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit', 103)">✏️</button>
+                      <button class="row-action-btn delete" onclick="event.stopPropagation(); openModal()">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="expand-row" id="exp-103">
+                  <td colspan="9">
+                    <div class="expand-content">
+                      <div class="prop-grid">
+                        <div class="prop-item"><div class="prop-label">Order ID</div><div class="prop-value mono">ORD-103</div></div>
+                        <div class="prop-item"><div class="prop-label">Order Name</div><div class="prop-value">Land Division — Mladost</div></div>
+                        <div class="prop-item"><div class="prop-label">Status</div><div class="prop-value"><span class="status-badge status-done">● Done</span></div></div>
+                        <div class="prop-item"><div class="prop-label">Created</div><div class="prop-value mono">18.01.2025</div></div>
+                        <div class="prop-item"><div class="prop-label">Client</div><div class="prop-value link">Georgi Todorov</div></div>
+                        <div class="prop-item"><div class="prop-label">Creator</div><div class="prop-value">B. Dimitrov</div></div>
+                        <div class="prop-item"><div class="prop-label">Price</div><div class="prop-value mono">2,100 BGN</div></div>
+                        <div class="prop-item"><div class="prop-label">Advance</div><div class="prop-value mono">2,100 BGN</div></div>
+                        <div class="prop-item"><div class="prop-label">Payment Status</div><div class="prop-value"><span class="status-badge status-done">● Paid</span></div></div>
+                        <div class="prop-item"><div class="prop-label">Activities</div><div class="prop-value mono">2</div></div>
+                        <div class="prop-item"><div class="prop-label">Plots</div><div class="prop-value mono">1</div></div>
+                        <div class="prop-item"><div class="prop-label">Supervisor</div><div class="prop-value">P. Nikolov</div></div>
+                        <div class="prop-item span-2"><div class="prop-label">Comments</div><div class="prop-value">Completed. All documents delivered to client.</div></div>
+                        <div class="prop-item span-2"><div class="prop-label">Source / Referral</div><div class="prop-value">Returning client</div></div>
+                      </div>
+                      <div class="expand-actions">
+                        <button class="btn btn-sm" onclick="openEditPage('edit', 103)">✏️ Edit Order</button>
+                        <button class="btn btn-sm btn-danger" onclick="openModal()">🗑️ Delete</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Order 104 -->
+                <tr onclick="selectOrder(this)">
+                  <td><button class="expand-toggle" onclick="event.stopPropagation(); toggleExpand('exp-104', this)">▸</button></td>
+                  <td style="font-family:'IBM Plex Mono'; color:var(--text-muted)">104</td>
+                  <td style="font-weight:600">Boundary Survey — Dragalevtsi</td>
+                  <td><span class="status-badge status-active">● Active</span></td>
+                  <td>Elena Stoyanova</td>
+                  <td>P. Nikolov</td>
+                  <td style="font-family:'IBM Plex Mono'">4,500</td>
+                  <td style="color:var(--text-muted)">20.01.2025</td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit', 104)">✏️</button>
+                      <button class="row-action-btn delete" onclick="event.stopPropagation(); openModal()">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="expand-row" id="exp-104"><td colspan="9"><div class="expand-content"><div class="prop-grid">
+                  <div class="prop-item"><div class="prop-label">Order ID</div><div class="prop-value mono">ORD-104</div></div>
+                  <div class="prop-item"><div class="prop-label">Order Name</div><div class="prop-value">Boundary Survey — Dragalevtsi</div></div>
+                  <div class="prop-item"><div class="prop-label">Status</div><div class="prop-value"><span class="status-badge status-active">● Active</span></div></div>
+                  <div class="prop-item"><div class="prop-label">Created</div><div class="prop-value mono">20.01.2025</div></div>
+                </div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- BOTTOM: ORDER DETAIL -->
+        <div class="bottom-panel">
+          <div class="detail-header">
+            <div class="detail-tab active" onclick="setDetailTab(this, 'activities')">Activities <span class="tab-count">3</span></div>
+            <div class="detail-tab" onclick="setDetailTab(this, 'clients')">Clients <span class="tab-count">1</span></div>
+            <div class="detail-tab" onclick="setDetailTab(this, 'plots')">Plots & Docs <span class="tab-count">2</span></div>
+            <div class="detail-tab" onclick="setDetailTab(this, 'invoices')">Invoices <span class="tab-count">1</span></div>
+          </div>
+
+          <!-- Activities -->
+          <div class="tab-content" id="dtab-activities" style="flex:1; display:flex; min-height:0;">
+            <div class="master-detail">
+              <div class="master-pane">
+                <div class="pane-toolbar">
+                  <span class="pane-title">Activities</span>
+                  <div style="flex:1"></div>
+                  <button class="btn btn-sm btn-primary" onclick="openEditPage('create-activity')">+ Add</button>
+                </div>
+                <div class="pane-scroll">
+                  <table>
+                    <thead><tr><th>Type</th><th>Executor</th><th>Status</th><th style="width:55px"></th></tr></thead>
+                    <tbody>
+                      <tr class="selected" onclick="selectActivity(this)">
+                        <td style="font-weight:600">Geodesy</td><td>B. Dimitrov</td>
+                        <td><span class="status-badge status-active">● Active</span></td>
+                        <td><div class="row-actions" style="opacity:1"><button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit-activity')">✏️</button><button class="row-action-btn delete" onclick="event.stopPropagation(); openModal()">🗑️</button></div></td>
+                      </tr>
+                      <tr onclick="selectActivity(this)">
+                        <td style="font-weight:600">Legal Review</td><td>S. Georgiev</td>
+                        <td><span class="status-badge status-pending">● Pending</span></td>
+                        <td><div class="row-actions"><button class="row-action-btn">✏️</button><button class="row-action-btn delete">🗑️</button></div></td>
+                      </tr>
+                      <tr onclick="selectActivity(this)">
+                        <td style="font-weight:600">Documentation</td><td>P. Nikolov</td>
+                        <td><span class="status-badge status-done">● Done</span></td>
+                        <td><div class="row-actions"><button class="row-action-btn">✏️</button><button class="row-action-btn delete">🗑️</button></div></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="detail-pane">
+                <div class="pane-toolbar">
+                  <span class="pane-title">Tasks — Geodesy</span>
+                  <div style="flex:1"></div>
+                  <button class="btn btn-sm btn-primary" onclick="openEditPage('create-task')">+ Add Task</button>
+                </div>
+                <div class="pane-scroll">
+                  <table>
+                    <thead><tr><th style="width:30px"></th><th>Task</th><th>Assigned</th><th>Start</th><th>Duration</th><th>Status</th><th style="width:55px"></th></tr></thead>
+                    <tbody>
+                      <tr>
+                        <td><button class="expand-toggle" onclick="toggleExpand('texp-1', this)" style="width:18px;height:18px;font-size:9px">▸</button></td>
+                        <td style="font-weight:600">Field Measurement</td><td>B. Dimitrov</td><td style="color:var(--text-muted)">16.01</td><td>2 days</td>
+                        <td><span class="status-badge status-done">● Done</span></td>
+                        <td><div class="row-actions"><button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit-task')">✏️</button><button class="row-action-btn delete">🗑️</button></div></td>
+                      </tr>
+                      <tr class="expand-row" id="texp-1"><td colspan="7"><div class="expand-content"><div class="prop-grid form-grid-4">
+                        <div class="prop-item"><div class="prop-label">Task ID</div><div class="prop-value mono">TSK-001</div></div>
+                        <div class="prop-item"><div class="prop-label">Task Type</div><div class="prop-value">Field Measurement</div></div>
+                        <div class="prop-item"><div class="prop-label">Assigned To</div><div class="prop-value">B. Dimitrov</div></div>
+                        <div class="prop-item"><div class="prop-label">Status</div><div class="prop-value"><span class="status-badge status-done">● Done</span></div></div>
+                        <div class="prop-item"><div class="prop-label">Start Date</div><div class="prop-value mono">16.01.2025</div></div>
+                        <div class="prop-item"><div class="prop-label">Duration</div><div class="prop-value">2 days</div></div>
+                        <div class="prop-item"><div class="prop-label">Cost</div><div class="prop-value mono">800 BGN</div></div>
+                        <div class="prop-item"><div class="prop-label">Evaluation</div><div class="prop-value">Completed on time</div></div>
+                        <div class="prop-item span-2"><div class="prop-label">Comments</div><div class="prop-value">Coordinates verified with GPS base station. All control points measured.</div></div>
+                        <div class="prop-item span-2"><div class="prop-label">Equipment Used</div><div class="prop-value">Leica TS16, GNSS RTK receiver</div></div>
+                      </div></div></td></tr>
+
+                      <tr>
+                        <td><button class="expand-toggle" onclick="toggleExpand('texp-2', this)" style="width:18px;height:18px;font-size:9px">▸</button></td>
+                        <td style="font-weight:600">Data Processing</td><td>B. Dimitrov</td><td style="color:var(--text-muted)">18.01</td><td>1 day</td>
+                        <td><span class="status-badge status-active">● Active</span></td>
+                        <td><div class="row-actions"><button class="row-action-btn">✏️</button><button class="row-action-btn delete">🗑️</button></div></td>
+                      </tr>
+                      <tr class="expand-row" id="texp-2"><td colspan="7"><div class="expand-content"><div class="prop-grid form-grid-4">
+                        <div class="prop-item"><div class="prop-label">Task ID</div><div class="prop-value mono">TSK-002</div></div>
+                        <div class="prop-item"><div class="prop-label">Task Type</div><div class="prop-value">Data Processing</div></div>
+                        <div class="prop-item"><div class="prop-label">Assigned To</div><div class="prop-value">B. Dimitrov</div></div>
+                        <div class="prop-item"><div class="prop-label">Status</div><div class="prop-value"><span class="status-badge status-active">● Active</span></div></div>
+                      </div></div></td></tr>
+
+                      <tr>
+                        <td><button class="expand-toggle" onclick="toggleExpand('texp-3', this)" style="width:18px;height:18px;font-size:9px">▸</button></td>
+                        <td style="font-weight:600">Coordinate Calculation</td><td>P. Nikolov</td><td style="color:var(--text-muted)">19.01</td><td>1 day</td>
+                        <td><span class="status-badge status-pending">● Pending</span></td>
+                        <td><div class="row-actions"><button class="row-action-btn">✏️</button><button class="row-action-btn delete">🗑️</button></div></td>
+                      </tr>
+                      <tr class="expand-row" id="texp-3"><td colspan="7"><div class="expand-content"><div class="prop-grid form-grid-4">
+                        <div class="prop-item"><div class="prop-label">Task ID</div><div class="prop-value mono">TSK-003</div></div>
+                        <div class="prop-item"><div class="prop-label">Task Type</div><div class="prop-value">Coordinate Calculation</div></div>
+                        <div class="prop-item"><div class="prop-label">Assigned To</div><div class="prop-value">P. Nikolov</div></div>
+                        <div class="prop-item"><div class="prop-label">Status</div><div class="prop-value"><span class="status-badge status-pending">● Pending</span></div></div>
+                      </div></div></td></tr>
+
+                      <tr>
+                        <td><button class="expand-toggle" style="width:18px;height:18px;font-size:9px">▸</button></td>
+                        <td style="font-weight:600">Map Drafting</td><td>S. Georgiev</td><td style="color:var(--text-muted)">20.01</td><td>3 days</td>
+                        <td><span class="status-badge status-pending">● Pending</span></td>
+                        <td><div class="row-actions"><button class="row-action-btn">✏️</button><button class="row-action-btn delete">🗑️</button></div></td>
+                      </tr>
+                      <tr>
+                        <td><button class="expand-toggle" style="width:18px;height:18px;font-size:9px">▸</button></td>
+                        <td style="font-weight:600">Quality Review</td><td>B. Dimitrov</td><td style="color:var(--text-muted)">23.01</td><td>1 day</td>
+                        <td><span class="status-badge status-pending">● Pending</span></td>
+                        <td><div class="row-actions"><button class="row-action-btn">✏️</button><button class="row-action-btn delete">🗑️</button></div></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plots & Docs -->
+          <div class="tab-content" id="dtab-plots" style="display:none; flex:1; overflow-y:auto;">
+            <div class="pane-toolbar"><span class="pane-title">Plots & Documents</span><div style="flex:1"></div><button class="row-action-btn" title="Link Plot" style="opacity:1; font-size:14px;">＋</button></div>
+            <div class="plot-card">
+              <div class="plot-header">
+                <span class="plot-icon">🗺️</span> Plot #4521 — Sofia, Lozenets, kv. 15, parcel III
+                <div style="margin-left:auto; display:flex; gap:2px;">
+                  <button class="row-action-btn" style="opacity:1" onclick="openEditPage('edit', 4521)" title="Edit plot">✏️</button>
+                  <button class="row-action-btn delete" style="opacity:1" onclick="openModal()" title="Unlink plot">🗑️</button>
+                </div>
+              </div>
+              <div class="plot-meta">Area: 1,200 m² · Municipality: Stolichna · Street: ul. Cherni Vrah 42</div>
+              <div class="doc-item" onclick="openDocPreview('Ownership Certificate #881')" title="Click to view"><span class="doc-icon">📄</span> <span class="doc-link">Ownership Certificate #881 — Ivan Petrov (2019)</span><div class="doc-actions"><button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit-doc')" title="Edit">✏️</button><button class="row-action-btn delete" onclick="event.stopPropagation(); openModal()" title="Delete">🗑️</button></div></div>
+              <div class="doc-item" onclick="openDocPreview('Cadastral Sketch #882')" title="Click to view"><span class="doc-icon">📄</span> <span class="doc-link">Cadastral Sketch #882 — Geodesy Agency (2023)</span><div class="doc-actions"><button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit-doc')" title="Edit">✏️</button><button class="row-action-btn delete" onclick="event.stopPropagation(); openModal()" title="Delete">🗑️</button></div></div>
+              <div class="doc-item" onclick="openDocPreview('Regulation Plan Extract #883')" title="Click to view"><span class="doc-icon">📄</span> <span class="doc-link">Regulation Plan Extract #883 (2024)</span><div class="doc-actions"><button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit-doc')" title="Edit">✏️</button><button class="row-action-btn delete" onclick="event.stopPropagation(); openModal()" title="Delete">🗑️</button></div></div>
+            </div>
+            <div class="plot-card">
+              <div class="plot-header">
+                <span class="plot-icon">🗺️</span> Plot #4522 — Sofia, Vitosha, kv. 8, parcel VII
+                <div style="margin-left:auto; display:flex; gap:2px;">
+                  <button class="row-action-btn" style="opacity:1" onclick="openEditPage('edit', 4522)" title="Edit plot">✏️</button>
+                  <button class="row-action-btn delete" style="opacity:1" onclick="openModal()" title="Unlink plot">🗑️</button>
+                </div>
+              </div>
+              <div class="plot-meta">Area: 800 m² · Municipality: Stolichna · Street: ul. Srebarna 15</div>
+              <div class="doc-item" onclick="openDocPreview('Ownership Certificate #900')" title="Click to view"><span class="doc-icon">📄</span> <span class="doc-link">Ownership Certificate #900 — Maria Ivanova (2020)</span><div class="doc-actions"><button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit-doc')" title="Edit">✏️</button><button class="row-action-btn delete" onclick="event.stopPropagation(); openModal()" title="Delete">🗑️</button></div></div>
+              <div class="doc-item" onclick="openDocPreview('Power of Attorney #901')" title="Click to view"><span class="doc-icon">📄</span> <span class="doc-link">Power of Attorney #901 — Notary Act (2024)</span><div class="doc-actions"><button class="row-action-btn" onclick="event.stopPropagation(); openEditPage('edit-doc')" title="Edit">✏️</button><button class="row-action-btn delete" onclick="event.stopPropagation(); openModal()" title="Delete">🗑️</button></div></div>
+              <div class="shared-warning">⚠️ Also used in Order #101, Order #105</div>
+            </div>
+          </div>
+
+          <!-- Clients -->
+          <div class="tab-content" id="dtab-clients" style="display:none; flex:1; overflow-y:auto;">
+            <div class="pane-toolbar"><span class="pane-title">Clients</span><div style="flex:1"></div><button class="row-action-btn" title="Link Client" style="opacity:1; font-size:14px;">＋</button></div>
+            <div style="padding:14px;"><table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Type</th></tr></thead>
+            <tbody><tr><td style="font-weight:600">Maria Ivanova</td><td>+359 888 123 456</td><td style="color:var(--blue)">m.ivanova@gmail.com</td><td><span class="status-badge status-active">Owner</span></td></tr></tbody></table></div>
+          </div>
+
+          <!-- Invoices -->
+          <div class="tab-content" id="dtab-invoices" style="display:none; flex:1; overflow-y:auto;">
+            <div class="pane-toolbar"><span class="pane-title">Invoices</span><div style="flex:1"></div><button class="row-action-btn" title="New Invoice" style="opacity:1; font-size:14px;">＋</button></div>
+            <div style="padding:14px;"><table><thead><tr><th>#</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody><tr><td style="font-family:'IBM Plex Mono'; color:var(--text-muted)">INV-2025-042</td><td>15.01.2025</td><td style="font-family:'IBM Plex Mono'; font-weight:600">3,800 BGN</td><td><span class="status-badge status-pending">● Unpaid</span></td></tr></tbody></table></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE: CREATE/EDIT ORDER ============ -->
+  <div class="page-view" id="page-edit-order">
+    <div class="topbar">
+      <h1 id="edit-order-title">Edit Order</h1>
+    </div>
+    <div class="form-page">
+      <div class="form-page-header">
+        <h2 id="edit-order-heading">Edit Order #102</h2>
+        <span class="form-id" id="edit-order-id">ORD-102</span>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="section-icon">📋</span> General Information</div>
+        <div class="form-grid">
+          <div class="form-group span-2"><label>Order Name</label><input type="text" value="Property Transfer — Vitosha"></div>
+          <div class="form-group"><label>Status</label><select><option>Active</option><option selected>Pending</option><option>Done</option><option>Cancelled</option></select></div>
+          <div class="form-group"><label>Client</label><select><option>Ivan Petrov</option><option selected>Maria Ivanova</option><option>Georgi Todorov</option><option>Elena Stoyanova</option></select></div>
+          <div class="form-group"><label>Creator</label><select><option>B. Dimitrov</option><option selected>S. Georgiev</option><option>P. Nikolov</option></select></div>
+          <div class="form-group"><label>Supervisor</label><select><option selected>B. Dimitrov</option><option>S. Georgiev</option><option>P. Nikolov</option></select></div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="section-icon">💰</span> Financial</div>
+        <div class="form-grid form-grid-4">
+          <div class="form-group"><label>Price (BGN)</label><input type="text" value="3,800"></div>
+          <div class="form-group"><label>Advance (BGN)</label><input type="text" value="1,500"></div>
+          <div class="form-group"><label>Payment Status</label><select><option selected>Partial</option><option>Unpaid</option><option>Paid</option></select></div>
+          <div class="form-group"><label>Invoice #</label><input type="text" value="INV-2025-042"></div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="section-icon">📝</span> Additional Details</div>
+        <div class="form-grid form-grid-2">
+          <div class="form-group"><label>Source / Referral</label><input type="text" value="Direct inquiry — website contact form"></div>
+          <div class="form-group"><label>Created Date</label><input type="date" value="2025-01-15"></div>
+          <div class="form-group span-2"><label>Comments</label><textarea>Power of attorney pending from notary. Client available for signing after 20.01.</textarea></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-danger" onclick="openModal()">Delete Order</button>
+      <div style="flex:1"></div>
+      <button class="btn" onclick="closeEditPage()">Cancel</button>
+      <button class="btn btn-primary btn-lg" onclick="closeEditPage()">💾 Save Order</button>
+    </div>
+  </div>
+
+  <!-- ============ PAGE: CREATE/EDIT ACTIVITY ============ -->
+  <div class="page-view" id="page-edit-activity">
+    <div class="topbar">
+      <h1 id="edit-activity-title">Edit Activity</h1>
+    </div>
+    <div class="form-page">
+      <div class="form-page-header">
+        <h2 id="edit-activity-heading">Edit Activity — Geodesy</h2>
+        <span class="form-id">Order #102</span>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="section-icon">⚡</span> Activity Details</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Activity Type</label><select><option selected>Geodesy</option><option>Legal Review</option><option>Documentation</option><option>Consultation</option><option>Field Work</option></select></div>
+          <div class="form-group"><label>Executor</label><select><option selected>B. Dimitrov</option><option>S. Georgiev</option><option>P. Nikolov</option></select></div>
+          <div class="form-group"><label>Status</label><select><option selected>Active</option><option>Pending</option><option>Done</option></select></div>
+          <div class="form-group"><label>Expected Duration</label><input type="text" value="8 days"></div>
+          <div class="form-group"><label>Start Date</label><input type="date" value="2025-01-16"></div>
+          <div class="form-group"><label>Priority</label><select><option>Low</option><option selected>Normal</option><option>High</option><option>Urgent</option></select></div>
+          <div class="form-group span-3"><label>Notes</label><textarea>Initial field survey completed. Data processing in progress. Awaiting coordinate verification from P. Nikolov.</textarea></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-danger" onclick="openModal()">Delete Activity</button>
+      <div style="flex:1"></div>
+      <button class="btn" onclick="closeEditPage()">Cancel</button>
+      <button class="btn btn-primary btn-lg" onclick="closeEditPage()">💾 Save Activity</button>
+    </div>
+  </div>
+
+  <!-- ============ PAGE: CREATE/EDIT TASK ============ -->
+  <div class="page-view" id="page-edit-task">
+    <div class="topbar">
+      <h1 id="edit-task-title">Edit Task</h1>
+    </div>
+    <div class="form-page">
+      <div class="form-page-header">
+        <h2 id="edit-task-heading">Edit Task — Field Measurement</h2>
+        <span class="form-id">Activity: Geodesy · Order #102</span>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="section-icon">✅</span> Task Details</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Task Type</label><select><option selected>Field Measurement</option><option>Data Processing</option><option>Coordinate Calculation</option><option>Map Drafting</option><option>Quality Review</option></select></div>
+          <div class="form-group"><label>Assigned To</label><select><option selected>B. Dimitrov</option><option>S. Georgiev</option><option>P. Nikolov</option></select></div>
+          <div class="form-group"><label>Status</label><select><option>Pending</option><option>Active</option><option selected>Done</option></select></div>
+          <div class="form-group"><label>Start Date</label><input type="date" value="2025-01-16"></div>
+          <div class="form-group"><label>Duration</label><input type="text" value="2 days"></div>
+          <div class="form-group"><label>Cost (BGN)</label><input type="text" value="800"></div>
+          <div class="form-group span-3"><label>Comments</label><textarea>Coordinates verified with GPS base station. All control points measured.</textarea></div>
+          <div class="form-group"><label>Evaluation</label><input type="text" value="Completed on time"></div>
+          <div class="form-group span-2"><label>Equipment Used</label><input type="text" value="Leica TS16, GNSS RTK receiver"></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-danger" onclick="openModal()">Delete Task</button>
+      <div style="flex:1"></div>
+      <button class="btn" onclick="closeEditPage()">Cancel</button>
+      <button class="btn btn-primary btn-lg" onclick="closeEditPage()">💾 Save Task</button>
+    </div>
+  </div>
+
+  <!-- ============ PAGE: EDIT DOCUMENT ============ -->
+  <div class="page-view" id="page-edit-doc">
+    <div class="topbar">
+      <h1 id="edit-doc-title">Edit Document</h1>
+    </div>
+    <div class="form-page">
+      <div class="form-page-header">
+        <h2 id="edit-doc-heading">Edit Document — Ownership Certificate #881</h2>
+        <span class="form-id">DOC-881</span>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="section-icon">📄</span> Document Details</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Type of Document</label><select><option selected>Ownership Certificate</option><option>Cadastral Sketch</option><option>Power of Attorney</option><option>Regulation Plan</option><option>Notary Act</option><option>Other</option></select></div>
+          <div class="form-group"><label>Document Number</label><input type="text" value="881"></div>
+          <div class="form-group"><label>Date Issued</label><input type="date" value="2019-05-12"></div>
+          <div class="form-group"><label>Issuer</label><input type="text" value="Sofia Cadastre Office"></div>
+          <div class="form-group"><label>TOM</label><input type="text" value="IV"></div>
+          <div class="form-group"><label>Register</label><input type="text" value="1245"></div>
+          <div class="form-group"><label>Date of Case</label><input type="date" value="2019-04-28"></div>
+          <div class="form-group"><label>Claim of Reading</label><input type="text" value="Verified"></div>
+          <div class="form-group span-3"><label>Notes</label><textarea>Original document held by client. Copy in office file #4521.</textarea></div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="section-icon">🔗</span> Linked Entities</div>
+        <div class="form-grid form-grid-2">
+          <div class="form-group"><label>Linked Plot</label><select><option selected>Plot #4521 — Lozenets</option><option>Plot #4522 — Vitosha</option></select></div>
+          <div class="form-group"><label>Owner</label><select><option selected>Ivan Petrov</option><option>Maria Ivanova</option></select></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-danger" onclick="openModal()">Delete Document</button>
+      <div style="flex:1"></div>
+      <button class="btn" onclick="closeEditPage()">Cancel</button>
+      <button class="btn btn-primary btn-lg" onclick="closeEditPage()">💾 Save Document</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ DOCUMENT PREVIEW MODAL ============ -->
+<div class="modal-overlay" id="doc-preview-overlay" onclick="closeDocPreview()">
+  <div class="doc-preview-modal" onclick="event.stopPropagation()">
+    <div class="doc-preview-header">
+      <span class="doc-preview-icon">📄</span>
+      <h3 id="doc-preview-title">Ownership Certificate #881</h3>
+      <div style="flex:1"></div>
+      <button class="btn btn-sm" onclick="closeDocPreview(); openEditPage('edit-doc')">✏️ Edit</button>
+      <button class="btn btn-sm btn-danger" onclick="closeDocPreview(); openModal()">🗑️ Delete</button>
+      <button class="drawer-close" onclick="closeDocPreview()">✕</button>
+    </div>
+    <div class="doc-preview-body">
+      <div class="prop-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="prop-item"><div class="prop-label">Document Type</div><div class="prop-value">Ownership Certificate</div></div>
+        <div class="prop-item"><div class="prop-label">Document #</div><div class="prop-value mono">881</div></div>
+        <div class="prop-item"><div class="prop-label">Date Issued</div><div class="prop-value mono">12.05.2019</div></div>
+        <div class="prop-item"><div class="prop-label">Issuer</div><div class="prop-value">Sofia Cadastre Office</div></div>
+        <div class="prop-item"><div class="prop-label">TOM</div><div class="prop-value mono">IV</div></div>
+        <div class="prop-item"><div class="prop-label">Register</div><div class="prop-value mono">1245</div></div>
+        <div class="prop-item"><div class="prop-label">Date of Case</div><div class="prop-value mono">28.04.2019</div></div>
+        <div class="prop-item"><div class="prop-label">Claim of Reading</div><div class="prop-value">Verified</div></div>
+        <div class="prop-item"><div class="prop-label">Owner</div><div class="prop-value link">Ivan Petrov</div></div>
+        <div class="prop-item"><div class="prop-label">Linked Plot</div><div class="prop-value link">Plot #4521 — Lozenets</div></div>
+        <div class="prop-item span-2"><div class="prop-label">Notes</div><div class="prop-value">Original document held by client. Copy in office file #4521.</div></div>
+      </div>
+      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);">
+        <div class="prop-label" style="margin-bottom: 10px;">Appears in Orders</div>
+        <div style="display:flex; gap: 6px; flex-wrap: wrap;">
+          <span class="status-badge status-active" style="cursor:pointer">Order #101 — Geodetic Survey</span>
+          <span class="status-badge status-pending" style="cursor:pointer">Order #102 — Property Transfer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DELETE MODAL ============ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-icon">🗑️</div>
+      <h3>Delete Order #102?</h3>
+    </div>
+    <div class="modal-body">This will permanently delete <strong>"Property Transfer — Vitosha"</strong> including 3 activities and 12 tasks. This action cannot be undone.</div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="closeModal()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== NAV =====
+  function setNav(el) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // ===== FILTER PILLS =====
+  function setPill(el) {
+    el.closest('.filter-pills').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // ===== SELECT ROW =====
+  function selectOrder(row) {
+    row.closest('tbody').querySelectorAll('tr:not(.expand-row)').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+  }
+
+  function selectActivity(row) {
+    row.closest('tbody').querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+  }
+
+  // ===== EXPAND ROW =====
+  function toggleExpand(id, btn) {
+    const row = document.getElementById(id);
+    const isOpen = row.classList.contains('open');
+    row.classList.toggle('open');
+    btn.classList.toggle('open');
+    btn.textContent = isOpen ? '▸' : '▾';
+  }
+
+  // ===== DETAIL TABS (bottom panel) =====
+  function setDetailTab(el, tabId) {
+    document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(tc => tc.style.display = 'none');
+    document.getElementById('dtab-' + tabId).style.display = 'flex';
+  }
+
+  // ===== MAIN PAGE TABS =====
+  let openTabs = [{ id: 'orders', label: 'Orders', icon: '📋', closeable: false }];
+
+  function renderTabBar() {
+    const bar = document.getElementById('tab-bar');
+    bar.innerHTML = '';
+    openTabs.forEach(tab => {
+      const div = document.createElement('div');
+      div.className = 'main-tab' + (tab.active ? ' active' : '') + (tab.unsaved ? ' unsaved' : '');
+      div.setAttribute('data-page', tab.id);
+      div.onclick = () => switchPage(tab.id);
+      div.innerHTML = `<span class="tab-icon">${tab.icon}</span><span class="tab-label">${tab.label}</span>`;
+      if (tab.closeable !== false) {
+        const close = document.createElement('button');
+        close.className = 'tab-close';
+        close.textContent = '✕';
+        close.onclick = (e) => { e.stopPropagation(); closeTab(tab.id); };
+        div.appendChild(close);
+      }
+      bar.appendChild(div);
+    });
+  }
+
+  function switchPage(pageId) {
+    openTabs.forEach(t => t.active = (t.id === pageId));
+    renderTabBar();
+    document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+    const page = document.getElementById('page-' + pageId);
+    if (page) page.classList.add('active');
+  }
+
+  function openEditPage(mode, id) {
+    let tab, pageId;
+    if (mode === 'create') {
+      pageId = 'edit-order';
+      tab = { id: pageId, label: 'New Order', icon: '➕', closeable: true, unsaved: true, active: true };
+      document.getElementById('edit-order-title').textContent = 'New Order';
+      document.getElementById('edit-order-heading').textContent = 'Create New Order';
+      document.getElementById('edit-order-id').textContent = 'NEW';
+    } else if (mode === 'edit') {
+      pageId = 'edit-order';
+      tab = { id: pageId, label: `Edit Order #${id || 102}`, icon: '✏️', closeable: true, unsaved: false, active: true };
+      document.getElementById('edit-order-title').textContent = `Edit Order #${id || 102}`;
+      document.getElementById('edit-order-heading').textContent = `Edit Order #${id || 102}`;
+      document.getElementById('edit-order-id').textContent = `ORD-${id || 102}`;
+    } else if (mode === 'create-activity') {
+      pageId = 'edit-activity';
+      tab = { id: pageId, label: 'New Activity', icon: '➕', closeable: true, unsaved: true, active: true };
+      document.getElementById('edit-activity-title').textContent = 'New Activity';
+      document.getElementById('edit-activity-heading').textContent = 'Create New Activity';
+    } else if (mode === 'edit-activity') {
+      pageId = 'edit-activity';
+      tab = { id: pageId, label: 'Edit Activity — Geodesy', icon: '✏️', closeable: true, unsaved: false, active: true };
+      document.getElementById('edit-activity-title').textContent = 'Edit Activity';
+      document.getElementById('edit-activity-heading').textContent = 'Edit Activity — Geodesy';
+    } else if (mode === 'create-task') {
+      pageId = 'edit-task';
+      tab = { id: pageId, label: 'New Task', icon: '➕', closeable: true, unsaved: true, active: true };
+      document.getElementById('edit-task-title').textContent = 'New Task';
+      document.getElementById('edit-task-heading').textContent = 'Create New Task';
+    } else if (mode === 'edit-task') {
+      pageId = 'edit-task';
+      tab = { id: pageId, label: 'Edit Task — Field Measurement', icon: '✏️', closeable: true, unsaved: false, active: true };
+      document.getElementById('edit-task-title').textContent = 'Edit Task';
+      document.getElementById('edit-task-heading').textContent = 'Edit Task — Field Measurement';
+    } else if (mode === 'edit-doc') {
+      pageId = 'edit-doc';
+      tab = { id: pageId, label: 'Edit Document', icon: '📄', closeable: true, unsaved: false, active: true };
+      document.getElementById('edit-doc-title').textContent = 'Edit Document';
+      document.getElementById('edit-doc-heading').textContent = 'Edit Document — Ownership Certificate #881';
+    }
+
+    // Remove existing tab with same pageId
+    openTabs = openTabs.filter(t => t.id !== pageId);
+    openTabs.forEach(t => t.active = false);
+    openTabs.push(tab);
+    renderTabBar();
+
+    document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+  }
+
+  function closeEditPage() {
+    const activeTab = openTabs.find(t => t.active);
+    if (activeTab && activeTab.id !== 'orders') {
+      closeTab(activeTab.id);
+    }
+  }
+
+  function closeTab(tabId) {
+    openTabs = openTabs.filter(t => t.id !== tabId);
+    // Activate the last tab
+    if (openTabs.length > 0) {
+      openTabs[openTabs.length - 1].active = true;
+      switchPage(openTabs[openTabs.length - 1].id);
+    }
+    renderTabBar();
+  }
+
+  // ===== MODAL =====
+  function openModal() { document.getElementById('modal-overlay').classList.add('open'); }
+  function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+
+  // ===== DOC PREVIEW =====
+  function openDocPreview(title) {
+    document.getElementById('doc-preview-title').textContent = title;
+    document.getElementById('doc-preview-overlay').classList.add('open');
+  }
+
+  function closeDocPreview() {
+    document.getElementById('doc-preview-overlay').classList.remove('open');
+  }
+
+  // ===== KEYBOARD =====
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeModal(); closeDocPreview(); }
+  });
+
+  // Init
+  openTabs[0].active = true;
+  renderTabBar();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             x:Class="Wolf.Desktop.Views.InvoicesView"
+             x:CompileBindings="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ===== TOP BAR ===== -->
+        <Border Grid.Row="0"
+                Background="{StaticResource BrushSurface}"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{StaticResource BrushBorder}"
+                Height="52">
+            <Grid ColumnDefinitions="*,Auto" Margin="24,0">
+                <TextBlock Text="Фактури"
+                           FontSize="16" FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <Border Background="{StaticResource BrushSurfaceAlt}"
+                            BorderBrush="{StaticResource BrushBorder}"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Padding="10,6"
+                            Width="260">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="&#x1F50D;" VerticalAlignment="Center" FontSize="12"/>
+                            <TextBox Text="{Binding SearchText}"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     Padding="0"
+                                     Watermark="Търсене на фактури..."
+                                     VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <Button Classes="primary sm"
+                            Command="{Binding NewInvoiceCommand}">
+                        + Нова фактура
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ===== INVOICE TABLE ===== -->
+        <Grid Grid.Row="1" RowDefinitions="Auto,*">
+
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="60,120,*,120,65"
+                  Background="{StaticResource BrushSurfaceAlt}"
+                  Height="32">
+                <TextBlock Grid.Column="0" Text="#"
+                           FontSize="10" FontWeight="Bold"
+                           Foreground="{StaticResource BrushTextMuted}"
+                           VerticalAlignment="Center" Margin="12,0,0,0"/>
+                <TextBlock Grid.Column="1" Text="НОМЕР"
+                           FontSize="10" FontWeight="Bold"
+                           Foreground="{StaticResource BrushTextMuted}"
+                           VerticalAlignment="Center" Margin="4,0"/>
+                <TextBlock Grid.Column="2" Text="ПОРЪЧКА"
+                           FontSize="10" FontWeight="Bold"
+                           Foreground="{StaticResource BrushTextMuted}"
+                           VerticalAlignment="Center" Margin="4,0"/>
+                <TextBlock Grid.Column="3" Text="СУМА"
+                           FontSize="10" FontWeight="Bold"
+                           Foreground="{StaticResource BrushTextMuted}"
+                           VerticalAlignment="Center" Margin="4,0"/>
+            </Grid>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                    <ListBox ItemsSource="{Binding FilteredInvoices}"
+                             SelectedItem="{Binding SelectedInvoice}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Padding="0">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="vm:InvoiceRowViewModel">
+                                <StackPanel>
+                                    <!-- Main row -->
+                                    <Grid ColumnDefinitions="60,120,*,120,65"
+                                          MinHeight="36"
+                                          Background="Transparent">
+                                        <Grid.Styles>
+                                            <Style Selector="Grid:pointerover">
+                                                <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}"/>
+                                            </Style>
+                                        </Grid.Styles>
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding Invoiceid}"
+                                                   FontFamily="IBM Plex Mono, Consolas"
+                                                   Foreground="{StaticResource BrushTextMuted}"
+                                                   FontSize="12"
+                                                   VerticalAlignment="Center"
+                                                   Margin="12,0,0,0"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding Number}"
+                                                   FontWeight="SemiBold"
+                                                   FontSize="12.5"
+                                                   VerticalAlignment="Center"
+                                                   Margin="4,0"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding OrderName}"
+                                                   Foreground="{StaticResource BrushTextSecondary}"
+                                                   FontSize="12"
+                                                   VerticalAlignment="Center"
+                                                   Margin="4,0"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="3"
+                                                   Text="{Binding Sum, StringFormat='{}{0:N2} лв.'}"
+                                                   FontWeight="SemiBold"
+                                                   FontSize="12"
+                                                   Foreground="#3a7d44"
+                                                   VerticalAlignment="Center"
+                                                   Margin="4,0"/>
+                                        <StackPanel Grid.Column="4"
+                                                    Orientation="Horizontal"
+                                                    Spacing="2"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center">
+                                            <Button Classes="icon sm"
+                                                    Command="{Binding $parent[UserControl].DataContext.EditInvoiceCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip.Tip="Редактиране">
+                                                <TextBlock Text="&#x270F;&#xFE0F;" FontSize="13"/>
+                                            </Button>
+                                            <Button Classes="icon sm"
+                                                    Command="{Binding $parent[UserControl].DataContext.DeleteInvoiceCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip.Tip="Изтриване">
+                                                <TextBlock Text="&#x1F5D1;&#xFE0F;" FontSize="13"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Expand content when selected -->
+                                    <Border IsVisible="{Binding $parent[ListBoxItem].IsSelected}"
+                                            Background="{StaticResource BrushSurfaceAlt}"
+                                            BorderThickness="3,0,0,0"
+                                            BorderBrush="{StaticResource BrushAccent}"
+                                            Padding="20,12,20,16">
+                                        <StackPanel Spacing="14">
+                                            <Button Classes="icon sm"
+                                                    HorizontalAlignment="Right"
+                                                    Margin="0,-4,0,0"
+                                                    ToolTip.Tip="Свиване"
+                                                    Command="{Binding $parent[UserControl].DataContext.DeselectInvoiceCommand}">
+                                                <TextBlock Text="&#x25B2;" FontSize="11" Foreground="{StaticResource BrushTextMuted}"/>
+                                            </Button>
+
+                                            <WrapPanel Orientation="Horizontal">
+                                                <StackPanel Margin="0,0,24,8" Width="100">
+                                                    <TextBlock Text="ИД ФАКТУРА" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Invoiceid, StringFormat='#{0}'}"
+                                                               FontFamily="IBM Plex Mono, Consolas" FontSize="12.5"/>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="140">
+                                                    <TextBlock Text="НОМЕР" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Number}" FontSize="12.5" FontWeight="SemiBold"/>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="200">
+                                                    <TextBlock Text="ПОРЪЧКА" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock FontSize="12.5">
+                                                        <Run Text="{Binding OrderName}"/>
+                                                        <Run Text=" ("/>
+                                                        <Run Text="{Binding Requestid, StringFormat='#{0}'}"/>
+                                                        <Run Text=")"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Margin="0,0,24,8" Width="140">
+                                                    <TextBlock Text="СУМА" FontSize="10" FontWeight="Bold"
+                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Sum, StringFormat='{}{0:N2} лв.'}"
+                                                               FontSize="14" FontWeight="Bold" Foreground="#3a7d44"/>
+                                                </StackPanel>
+                                            </WrapPanel>
+
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Button Classes="sm"
+                                                        Command="{Binding $parent[UserControl].DataContext.EditInvoiceCommand}"
+                                                        CommandParameter="{Binding}">
+                                                    &#x270F;&#xFE0F; Редактиране на фактура
+                                                </Button>
+                                                <Button Classes="sm danger"
+                                                        Command="{Binding $parent[UserControl].DataContext.DeleteInvoiceCommand}"
+                                                        CommandParameter="{Binding}">
+                                                    &#x1F5D1;&#xFE0F; Изтриване
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

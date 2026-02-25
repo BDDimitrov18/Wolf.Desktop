@@ -1,0 +1,312 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             xmlns:dto="using:Wolf.Dtos"
+             x:Class="Wolf.Desktop.Views.EditDocumentView"
+             x:CompileBindings="False"
+             Background="{StaticResource BrushSurface}">
+
+    <ScrollViewer>
+        <StackPanel Spacing="0" MaxWidth="720" Margin="32">
+
+            <TextBlock Text="{Binding FormTitle}"
+                       FontSize="20" FontWeight="Bold"
+                       Margin="0,0,0,28"/>
+
+            <Border IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Background="#fceaea"
+                    CornerRadius="6"
+                    Padding="14,10"
+                    Margin="0,0,0,16">
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="#b83232" FontSize="12"/>
+            </Border>
+
+            <!-- Link existing document toggle (only for new documents) -->
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8"
+                    Padding="24"
+                    Margin="0,0,0,16"
+                    IsVisible="{Binding IsOpenedAsNew}">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="ИЗБОР НА ДОКУМЕНТ"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+
+                    <CheckBox Content="Добави собственост към съществуващ документ"
+                              IsChecked="{Binding IsLinkingExisting}"
+                              FontSize="12"/>
+
+                    <StackPanel Spacing="6" IsVisible="{Binding IsLinkingExisting}">
+                        <TextBlock Text="Търси документ" FontSize="12" FontWeight="Medium"/>
+                        <AutoCompleteBox
+                            ItemsSource="{Binding AvailableDocuments}"
+                            SelectedItem="{Binding SelectedExistingDocument}"
+                            ValueMemberBinding="{Binding DisplayText}"
+                            FilterMode="Contains"
+                            MinimumPrefixLength="0"
+                            Watermark="Търси по тип, номер...">
+                            <AutoCompleteBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DisplayText}"/>
+                                </DataTemplate>
+                            </AutoCompleteBox.ItemTemplate>
+                        </AutoCompleteBox>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Document details -->
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8"
+                    Padding="24"
+                    Margin="0,0,0,16"
+                    IsEnabled="{Binding IsCreatingNew}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="ДЕТАЙЛИ НА ДОКУМЕНТ"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+
+                    <Grid ColumnDefinitions="*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Тип документ" FontSize="12" FontWeight="Medium"/>
+                            <AutoCompleteBox
+                                ItemsSource="{x:Static vm:EditDocumentViewModel.DocumentTypeOptions}"
+                                Text="{Binding Typeofdocument}"
+                                FilterMode="Contains"
+                                MinimumPrefixLength="0"
+                                Watermark="напр. нотариален акт"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Номер на документ" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Text="{Binding Numberofdocument}" Watermark="Номер на документ"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Издател" FontSize="12" FontWeight="Medium"/>
+                            <AutoCompleteBox
+                                ItemsSource="{x:Static vm:EditDocumentViewModel.IssuerOptions}"
+                                Text="{Binding Issuer}"
+                                FilterMode="Contains"
+                                MinimumPrefixLength="0"
+                                Watermark="Издаващ орган"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Вид собственост" FontSize="12" FontWeight="Medium"/>
+                            <ComboBox ItemsSource="{x:Static vm:EditDocumentViewModel.OwnershipTypeOptions}"
+                                      SelectedItem="{Binding Typeofownership}"
+                                      HorizontalAlignment="Stretch"
+                                      PlaceholderText="Избери вид собственост"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Registration data -->
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8"
+                    Padding="24"
+                    Margin="0,0,0,16"
+                    IsEnabled="{Binding IsCreatingNew}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="ДАННИ ЗА РЕГИСТРАЦИЯ"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+
+                    <Grid ColumnDefinitions="*,16,*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Том" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Text="{Binding Tom}" Watermark="Том"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Регистър" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Text="{Binding Register}" Watermark="Регистър"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4" Spacing="6">
+                            <TextBlock Text="Дело" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Text="{Binding Doccase}" Watermark="Номер на дело"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Дата на издаване" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Text="{Binding Dateofissuing, StringFormat='{}{0:dd.MM.yyyy}'}"
+                                     Watermark="dd.MM.yyyy"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Дата на вписване" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Text="{Binding Dateofregistering, StringFormat='{}{0:dd.MM.yyyy}'}"
+                                     Watermark="dd.MM.yyyy"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- СОБСТВЕНИЦИ section -->
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8"
+                    Padding="24"
+                    Margin="0,0,0,16">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="СОБСТВЕНИЦИ"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+
+                    <ItemsControl ItemsSource="{Binding OwnerEntries}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource BrushSurface}"
+                                        CornerRadius="6"
+                                        Padding="16"
+                                        Margin="0,0,0,10"
+                                        BorderBrush="#e0e0e0"
+                                        BorderThickness="1"
+                                        >
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <StackPanel Grid.Column="0" Spacing="12">
+
+                                            <!-- Read-only owner display -->
+                                            <StackPanel Spacing="4" IsVisible="{Binding IsReadOnly}">
+                                                <TextBlock Text="Собственик (съществуващ)" FontSize="12" FontWeight="Medium"
+                                                           Foreground="{StaticResource BrushTextMuted}"/>
+                                                <TextBlock Text="{Binding SelectedOwner.Fullname}"
+                                                           FontSize="14" FontWeight="SemiBold"/>
+                                                <StackPanel Orientation="Horizontal" Spacing="16">
+                                                    <TextBlock FontSize="12" Foreground="{StaticResource BrushTextMuted}">
+                                                        <Run Text="Ид. части: "/><Run Text="{Binding IdealPartsText}"/>
+                                                    </TextBlock>
+                                                    <TextBlock FontSize="12" Foreground="{StaticResource BrushTextMuted}">
+                                                        <Run Text="Придобиване: "/><Run Text="{Binding Wayofacquiring}"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <!-- Editable: Owner selection row -->
+                                            <StackPanel Spacing="6" IsVisible="{Binding IsExistingOwner}"
+                                                        IsEnabled="{Binding IsReadOnly, Converter={x:Static BoolConverters.Not}}">
+                                                <TextBlock Text="Собственик" FontSize="12" FontWeight="Medium"
+                                                           IsVisible="{Binding IsReadOnly, Converter={x:Static BoolConverters.Not}}"/>
+                                                <AutoCompleteBox
+                                                    IsVisible="{Binding IsReadOnly, Converter={x:Static BoolConverters.Not}}"
+                                                    Watermark="Търсене по име..."
+                                                    ItemsSource="{Binding AvailableOwners}"
+                                                    SelectedItem="{Binding SelectedOwner}"
+                                                    ValueMemberBinding="{Binding Fullname}"
+                                                    FilterMode="Contains"
+                                                    MinimumPrefixLength="1">
+                                                    <AutoCompleteBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Fullname}"/>
+                                                        </DataTemplate>
+                                                    </AutoCompleteBox.ItemTemplate>
+                                                </AutoCompleteBox>
+                                            </StackPanel>
+
+                                            <!-- New owner toggle (hidden for read-only) -->
+                                            <CheckBox Content="Нов собственик"
+                                                      IsChecked="{Binding IsNewOwner}"
+                                                      FontSize="12"
+                                                      IsVisible="{Binding IsReadOnly, Converter={x:Static BoolConverters.Not}}"/>
+
+                                            <!-- New owner fields -->
+                                            <StackPanel Spacing="8" IsVisible="{Binding IsNewOwner}">
+                                                <Grid ColumnDefinitions="*,12,*,12,*">
+                                                    <StackPanel Grid.Column="0" Spacing="4">
+                                                        <TextBlock Text="Име" FontSize="12" FontWeight="Medium"/>
+                                                        <TextBox Text="{Binding NewOwnerFullname}"
+                                                                 Watermark="Пълно име"/>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="2" Spacing="4">
+                                                        <TextBlock Text="ЕГН" FontSize="12" FontWeight="Medium"/>
+                                                        <TextBox Text="{Binding NewOwnerEgn}"
+                                                                 Watermark="ЕГН"/>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="4" Spacing="4">
+                                                        <TextBlock Text="Адрес" FontSize="12" FontWeight="Medium"/>
+                                                        <TextBox Text="{Binding NewOwnerAddress}"
+                                                                 Watermark="Адрес"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </StackPanel>
+
+                                            <!-- Ideal parts + Way of acquiring (hidden for read-only) -->
+                                            <Grid ColumnDefinitions="*,12,*"
+                                                  IsVisible="{Binding IsReadOnly, Converter={x:Static BoolConverters.Not}}">
+                                                <StackPanel Grid.Column="0" Spacing="4">
+                                                    <TextBlock Text="Идеални части" FontSize="12" FontWeight="Medium"/>
+                                                    <TextBox Text="{Binding IdealPartsText}"
+                                                             Watermark="напр. 0.25 или 3/12"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2" Spacing="4">
+                                                    <TextBlock Text="Начин на придобиване" FontSize="12" FontWeight="Medium"/>
+                                                    <ComboBox ItemsSource="{x:Static vm:OwnerEntryViewModel.WayOfAcquiringOptions}"
+                                                              SelectedItem="{Binding Wayofacquiring}"
+                                                              HorizontalAlignment="Stretch"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <!-- Power of Attorney fields (hidden for read-only) -->
+                                            <Grid ColumnDefinitions="*,12,*,12,*"
+                                                  IsVisible="{Binding IsReadOnly, Converter={x:Static BoolConverters.Not}}">
+                                                <StackPanel Grid.Column="0" Spacing="4">
+                                                    <TextBlock Text="Номер на пълномощно" FontSize="12" FontWeight="Medium"/>
+                                                    <TextBox Text="{Binding PoaNumber}"
+                                                             Watermark="Номер"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2" Spacing="4">
+                                                    <TextBlock Text="Дата на издаване" FontSize="12" FontWeight="Medium"/>
+                                                    <TextBox Text="{Binding PoaDateofissuing, StringFormat='{}{0:dd.MM.yyyy}'}"
+                                                             Watermark="dd.MM.yyyy"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="4" Spacing="4">
+                                                    <TextBlock Text="Издател" FontSize="12" FontWeight="Medium"/>
+                                                    <TextBox Text="{Binding PoaIssuer}"
+                                                             Watermark="Издател"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+
+                                        <!-- Remove button (hidden for read-only) -->
+                                        <Button Grid.Column="1"
+                                                Content="X"
+                                                VerticalAlignment="Top"
+                                                Margin="8,0,0,0"
+                                                Padding="6,4"
+                                                FontSize="11"
+                                                IsVisible="{Binding IsReadOnly, Converter={x:Static BoolConverters.Not}}"
+                                                Command="{Binding $parent[ItemsControl].DataContext.RemoveOwnerCommand}"
+                                                CommandParameter="{Binding}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button Command="{Binding AddOwnerCommand}"
+                            HorizontalAlignment="Left"
+                            Padding="12,6"
+                            FontSize="12">
+                        + Добави собственик
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Save / Cancel -->
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Classes="primary"
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={x:Static BoolConverters.Not}}">
+                    Запази документ
+                </Button>
+                <Button Command="{Binding CancelCommand}">Отказ</Button>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,199 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Wolf.Desktop.App"
+             xmlns:local="using:Wolf.Desktop"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             xmlns:views="using:Wolf.Desktop.Views"
+             RequestedThemeVariant="Light">
+
+    <Application.DataTemplates>
+        <DataTemplate DataType="{x:Type vm:WolfDocument}">
+            <views:WolfDocumentView />
+        </DataTemplate>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Colors -->
+            <Color x:Key="ColBg">#f4f1ec</Color>
+            <Color x:Key="ColSurface">#ffffff</Color>
+            <Color x:Key="ColSurfaceAlt">#faf8f5</Color>
+            <Color x:Key="ColBorder">#e2ddd5</Color>
+            <Color x:Key="ColBorderStrong">#cdc6ba</Color>
+            <Color x:Key="ColText">#2c2418</Color>
+            <Color x:Key="ColTextSecondary">#7a6f60</Color>
+            <Color x:Key="ColTextMuted">#a89e8e</Color>
+            <Color x:Key="ColAccent">#c45d2c</Color>
+            <Color x:Key="ColAccentHover">#a84e24</Color>
+            <Color x:Key="ColAccentLight">#fdf0ea</Color>
+            <Color x:Key="ColGreen">#3a7d44</Color>
+            <Color x:Key="ColGreenBg">#edf5ee</Color>
+            <Color x:Key="ColYellow">#b8860b</Color>
+            <Color x:Key="ColYellowBg">#fdf6e3</Color>
+            <Color x:Key="ColBlue">#3b6fa0</Color>
+            <Color x:Key="ColBlueBg">#edf3f9</Color>
+            <Color x:Key="ColRed">#b83232</Color>
+            <Color x:Key="ColRedBg">#fceaea</Color>
+            <Color x:Key="ColSidebarBg">#2c2418</Color>
+            <Color x:Key="ColSidebarText">#c9bfaf</Color>
+            <Color x:Key="ColSidebarHover">#3d3226</Color>
+            <Color x:Key="ColSidebarActive">#c45d2c</Color>
+
+            <!-- Brushes -->
+            <SolidColorBrush x:Key="BrushBg" Color="{StaticResource ColBg}"/>
+            <SolidColorBrush x:Key="BrushSurface" Color="{StaticResource ColSurface}"/>
+            <SolidColorBrush x:Key="BrushSurfaceAlt" Color="{StaticResource ColSurfaceAlt}"/>
+            <SolidColorBrush x:Key="BrushBorder" Color="{StaticResource ColBorder}"/>
+            <SolidColorBrush x:Key="BrushBorderStrong" Color="{StaticResource ColBorderStrong}"/>
+            <SolidColorBrush x:Key="BrushText" Color="{StaticResource ColText}"/>
+            <SolidColorBrush x:Key="BrushTextSecondary" Color="{StaticResource ColTextSecondary}"/>
+            <SolidColorBrush x:Key="BrushTextMuted" Color="{StaticResource ColTextMuted}"/>
+            <SolidColorBrush x:Key="BrushAccent" Color="{StaticResource ColAccent}"/>
+            <SolidColorBrush x:Key="BrushAccentHover" Color="{StaticResource ColAccentHover}"/>
+            <SolidColorBrush x:Key="BrushAccentLight" Color="{StaticResource ColAccentLight}"/>
+            <SolidColorBrush x:Key="BrushSidebarBg" Color="{StaticResource ColSidebarBg}"/>
+            <SolidColorBrush x:Key="BrushSidebarText" Color="{StaticResource ColSidebarText}"/>
+
+            <!-- ═══ Dock theme overrides ═══ -->
+            <!-- Tab strip background -->
+            <SolidColorBrush x:Key="DockDocumentTabStripBackgroundBrush" Color="{StaticResource ColBg}"/>
+            <SolidColorBrush x:Key="DockDocumentTabStripMaskBrush" Color="{StaticResource ColBg}"/>
+            <!-- Active tab (focused) -->
+            <SolidColorBrush x:Key="DockTabActiveBackgroundBrush" Color="{StaticResource ColSurface}"/>
+            <SolidColorBrush x:Key="DockTabActiveForegroundBrush" Color="{StaticResource ColText}"/>
+            <!-- Selected tab (not focused) -->
+            <SolidColorBrush x:Key="DockSurfaceHeaderBrush" Color="{StaticResource ColSurface}"/>
+            <SolidColorBrush x:Key="DockDocumentTabSelectedForegroundBrush" Color="{StaticResource ColText}"/>
+            <!-- Hover -->
+            <SolidColorBrush x:Key="DockTabHoverBackgroundBrush" Color="{StaticResource ColSurfaceAlt}"/>
+            <SolidColorBrush x:Key="DockDocumentTabPointerOverForegroundBrush" Color="{StaticResource ColText}"/>
+            <!-- Tab text -->
+            <SolidColorBrush x:Key="DockTabForegroundBrush" Color="{StaticResource ColTextSecondary}"/>
+            <!-- Separator and borders -->
+            <SolidColorBrush x:Key="DockSeparatorBrush" Color="{StaticResource ColBorder}"/>
+            <SolidColorBrush x:Key="DockTabActiveIndicatorBrush" Color="{StaticResource ColAccent}"/>
+            <SolidColorBrush x:Key="DockBorderSubtleBrush" Color="{StaticResource ColBorder}"/>
+            <SolidColorBrush x:Key="DockDocumentContentBorderBrush" Color="{StaticResource ColBorder}"/>
+            <Thickness x:Key="DockDocumentContentBorderThickness">0,1,0,0</Thickness>
+            <!-- Close button hover -->
+            <SolidColorBrush x:Key="DockTabCloseHoverBackgroundBrush" Color="{StaticResource ColRedBg}"/>
+            <!-- Tab shape -->
+            <CornerRadius x:Key="DockDocumentTabItemCornerRadius">8,8,0,0</CornerRadius>
+            <Thickness x:Key="DockDocumentTabItemPadding">12,7</Thickness>
+            <Thickness x:Key="DockDocumentTabItemMargin">1,0</Thickness>
+            <x:Double x:Key="DockDocumentTabItemMinHeight">34</x:Double>
+            <x:Double x:Key="DockDocumentTabStripMinHeight">36</x:Double>
+            <!-- Close button size -->
+            <x:Double x:Key="DockCloseButtonSize">18</x:Double>
+            <!-- Separator visibility -->
+            <x:Double x:Key="DockDocumentTabItemSeparatorOpacity">0</x:Double>
+            <x:Boolean x:Key="DockDocumentTabStripSeparatorVisible">True</x:Boolean>
+            <x:Double x:Key="DockDocumentTabStripSeparatorSize">1</x:Double>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Dock.Avalonia.Themes.Fluent/DockFluentTheme.axaml" />
+
+        <!-- Dock tab header: show emoji icon + title -->
+        <Style Selector="DocumentControl">
+            <Setter Property="HeaderTemplate">
+                <DataTemplate DataType="vm:WolfDocument">
+                    <TextBlock Text="{Binding Title}"
+                               FontSize="12" FontWeight="SemiBold"
+                               FontFamily="IBM Plex Sans, Segoe UI, Arial"
+                               VerticalAlignment="Center"
+                               MaxWidth="180"
+                               TextTrimming="CharacterEllipsis"/>
+                </DataTemplate>
+            </Setter>
+            <Setter Property="IconTemplate">
+                <DataTemplate DataType="vm:WolfDocument">
+                    <TextBlock Text="{Binding Icon}"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               Margin="0,0,2,0"/>
+                </DataTemplate>
+            </Setter>
+        </Style>
+
+        <!-- Dock tab strip font -->
+        <Style Selector="DocumentTabStripItem">
+            <Setter Property="FontFamily" Value="IBM Plex Sans, Segoe UI, Arial"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <!-- Global text style -->
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="IBM Plex Sans, Segoe UI, Arial"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushText}"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <!-- Default button -->
+        <Style Selector="Button">
+            <Setter Property="FontFamily" Value="IBM Plex Sans, Segoe UI, Arial"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="14,7"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
+            <Setter Property="Background" Value="{StaticResource BrushSurface}"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushText}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}"/>
+        </Style>
+
+        <!-- Primary button -->
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+        </Style>
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource BrushAccentHover}"/>
+        </Style>
+
+        <!-- Danger button -->
+        <Style Selector="Button.danger">
+            <Setter Property="Foreground" Value="{StaticResource BrushAccent}"/>
+            <Setter Property="BorderBrush" Value="#e8c4c4"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style Selector="Button.danger:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#fceaea"/>
+        </Style>
+
+        <!-- Icon/minimal button -->
+        <Style Selector="Button.icon">
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="MinWidth" Value="26"/>
+            <Setter Property="MinHeight" Value="26"/>
+        </Style>
+
+        <!-- Small button -->
+        <Style Selector="Button.sm">
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+
+        <!-- TextBox -->
+        <Style Selector="TextBox">
+            <Setter Property="FontFamily" Value="IBM Plex Sans, Segoe UI, Arial"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,7"/>
+        </Style>
+    </Application.Styles>
+</Application>

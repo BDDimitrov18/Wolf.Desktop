@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "jfwuCGvbT74yk7GQ9xs04/1xLKP3j2QH8yubwpbVzrk=",
+  "Source": "Wolf.Api",
+  "BasePath": "_content/Wolf.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

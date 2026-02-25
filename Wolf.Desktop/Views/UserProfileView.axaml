@@ -1,0 +1,248 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             xmlns:dto="using:Wolf.Dtos"
+             x:Class="Wolf.Desktop.Views.UserProfileView"
+             x:CompileBindings="False">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,20,28,28" Spacing="20">
+
+            <!-- ===== PROFILE HEADER ===== -->
+            <Border Background="{StaticResource BrushSurface}"
+                    BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                    CornerRadius="12" Padding="28,24">
+                <Grid ColumnDefinitions="Auto,*">
+                    <!-- Avatar -->
+                    <Border Width="64" Height="64" CornerRadius="32"
+                            Background="{StaticResource BrushAccent}"
+                            Margin="0,0,20,0">
+                        <TextBlock Text="{Binding Initials}"
+                                   FontSize="22" FontWeight="Bold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding DisplayName}"
+                                   FontSize="22" FontWeight="Bold"/>
+                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,4,0,0">
+                            <Border Background="#fdf0ea" CornerRadius="12" Padding="10,3">
+                                <TextBlock Text="{Binding Role}"
+                                           FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{StaticResource BrushAccent}"/>
+                            </Border>
+                            <TextBlock Text="{Binding Email}"
+                                       FontSize="12" Foreground="#3b6fa0"
+                                       VerticalAlignment="Center"
+                                       IsVisible="{Binding Email, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                            <TextBlock Text="{Binding Phone}"
+                                       FontSize="12" Foreground="{StaticResource BrushTextSecondary}"
+                                       VerticalAlignment="Center"
+                                       IsVisible="{Binding Phone, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ===== PROJECTED SALARY CARD ===== -->
+            <Border Background="{StaticResource BrushAccent}"
+                    CornerRadius="12" Padding="24,20">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel>
+                        <TextBlock Text="{Binding CurrentMonth, StringFormat='ПРОГНОЗНА ЗАПЛАТА — {0}'}"
+                                   FontSize="10" FontWeight="Bold"
+                                   Foreground="#ccffffff" LetterSpacing="0.5"/>
+                        <TextBlock Text="{Binding ProjectedSalary, StringFormat='{}{0:N2} лв.'}"
+                                   FontSize="34" FontWeight="Bold"
+                                   Foreground="White"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Margin="0,6,0,0"/>
+                        <TextBlock FontSize="11" Margin="0,6,0,0" Foreground="#bbffffff">
+                            <Run Text="На база"/>
+                            <Run Text="{Binding CompletedTasksThisMonth}" FontWeight="Bold"/>
+                            <Run Text="завършени задачи от"/>
+                            <Run Text="{Binding TasksThisMonth}" FontWeight="Bold"/>
+                            <Run Text="този месец"/>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center"
+                                HorizontalAlignment="Right">
+                        <TextBlock Text="ОТ НАЧАЛОТО" FontSize="9" FontWeight="Bold"
+                                   Foreground="#88ffffff" HorizontalAlignment="Right"/>
+                        <TextBlock Text="{Binding TotalEarnedAllTime, StringFormat='{}{0:N2} лв.'}"
+                                   FontSize="18" FontWeight="Bold"
+                                   Foreground="White"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   HorizontalAlignment="Right"
+                                   Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ===== MONTHLY STATS ROW ===== -->
+            <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                <!-- Tasks This Month -->
+                <Border Grid.Column="0" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="16,14">
+                    <StackPanel>
+                        <TextBlock Text="ЗАДАЧИ ТОЗИ МЕСЕЦ" FontSize="9" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                        <TextBlock Text="{Binding TasksThisMonth}"
+                                   FontSize="26" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Completed -->
+                <Border Grid.Column="2" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="16,14">
+                    <StackPanel>
+                        <TextBlock Text="ЗАВЪРШЕНИ" FontSize="9" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                        <TextBlock Text="{Binding CompletedTasksThisMonth}"
+                                   FontSize="26" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Foreground="#3a7d44"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Pending / Active -->
+                <Border Grid.Column="4" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="16,14">
+                    <StackPanel>
+                        <TextBlock Text="В ИЗПЪЛНЕНИЕ" FontSize="9" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                        <TextBlock Text="{Binding PendingTasksThisMonth}"
+                                   FontSize="26" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Foreground="#b8860b"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Activities -->
+                <Border Grid.Column="6" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="16,14">
+                    <StackPanel>
+                        <TextBlock Text="ДЕЙНОСТИ" FontSize="9" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                        <TextBlock Text="{Binding ActivitiesThisMonth}"
+                                   FontSize="26" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Foreground="#3b6fa0"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ===== ALL-TIME STATS ROW ===== -->
+            <Border Background="{StaticResource BrushSurface}"
+                    BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                    CornerRadius="10" Padding="20">
+                <Grid ColumnDefinitions="*,*,*">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="ОБЩО ЗАДАЧИ" FontSize="9" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding TotalTasks}"
+                                   FontSize="22" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                        <TextBlock Text="ОБЩО ЗАВЪРШЕНИ" FontSize="9" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding TotalCompletedTasks}"
+                                   FontSize="22" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Foreground="#3a7d44"
+                                   HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                        <TextBlock Text="ОБЩО ДЕЙНОСТИ" FontSize="9" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding TotalActivities}"
+                                   FontSize="22" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Foreground="#3b6fa0"
+                                   HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ===== RECENT COMPLETED TASKS ===== -->
+            <Border Background="{StaticResource BrushSurface}"
+                    BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                    CornerRadius="10" Padding="20">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="ПОСЛЕДНИ ЗАВЪРШЕНИ ЗАДАЧИ" FontSize="11" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+
+                    <!-- Header -->
+                    <Grid ColumnDefinitions="44,80,90,90,80"
+                          Background="{StaticResource BrushSurfaceAlt}" Height="28">
+                        <TextBlock Grid.Column="0" Text="#" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="8,0"/>
+                        <TextBlock Grid.Column="1" Text="ЗАПЛАЩАНЕ" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBlock Grid.Column="2" Text="НАЧАЛО" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBlock Grid.Column="3" Text="КРАЙ" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBlock Grid.Column="4" Text="ТАКСА" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding RecentTasks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="dto:TaskDto">
+                                <StackPanel>
+                                    <Grid ColumnDefinitions="44,80,90,90,80"
+                                          MinHeight="32" Background="Transparent">
+                                        <Grid.Styles>
+                                            <Style Selector="Grid:pointerover">
+                                                <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}"/>
+                                            </Style>
+                                        </Grid.Styles>
+                                        <TextBlock Grid.Column="0" Text="{Binding Taskid}"
+                                                   FontFamily="IBM Plex Mono, Consolas"
+                                                   Foreground="{StaticResource BrushTextMuted}"
+                                                   FontSize="11" VerticalAlignment="Center" Margin="8,0"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding Executantpayment, StringFormat='{}{0:N2}'}"
+                                                   FontFamily="IBM Plex Mono, Consolas"
+                                                   FontSize="11.5" FontWeight="SemiBold"
+                                                   Foreground="#3a7d44"
+                                                   VerticalAlignment="Center" Margin="4,0"/>
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding Startdate, StringFormat='{}{0:dd.MM.yyyy}'}"
+                                                   FontSize="11" VerticalAlignment="Center" Margin="4,0"/>
+                                        <TextBlock Grid.Column="3"
+                                                   Text="{Binding Finishdate, StringFormat='{}{0:dd.MM.yyyy}'}"
+                                                   FontSize="11" VerticalAlignment="Center" Margin="4,0"/>
+                                        <TextBlock Grid.Column="4"
+                                                   Text="{Binding Tax, StringFormat='{}{0:N2}'}"
+                                                   FontFamily="IBM Plex Mono, Consolas"
+                                                   FontSize="11"
+                                                   Foreground="{StaticResource BrushTextSecondary}"
+                                                   VerticalAlignment="Center" Margin="4,0"/>
+                                    </Grid>
+                                    <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

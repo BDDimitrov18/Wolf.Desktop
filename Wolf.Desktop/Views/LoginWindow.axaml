@@ -1,0 +1,363 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Wolf.Desktop.ViewModels"
+        x:Class="Wolf.Desktop.Views.LoginWindow"
+        x:DataType="vm:LoginViewModel"
+        Title="Wolf — Вход"
+        Width="420" Height="520"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        SystemDecorations="BorderOnly"
+        Background="#2c2418"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1">
+
+    <Window.Styles>
+        <!-- Card fade-in + slide-up animation -->
+        <Style Selector="Border.login-card">
+            <Style.Animations>
+                <Animation Duration="0:0:0.45" FillMode="Forward" Easing="CubicEaseOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0"/>
+                        <Setter Property="TranslateTransform.Y" Value="28"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1"/>
+                        <Setter Property="TranslateTransform.Y" Value="0"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+        <!-- Logo fade-in (slightly delayed) -->
+        <Style Selector="StackPanel.logo-panel">
+            <Style.Animations>
+                <Animation Duration="0:0:0.5" FillMode="Forward" Delay="0:0:0.1" Easing="CubicEaseOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0"/>
+                        <Setter Property="TranslateTransform.Y" Value="-12"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1"/>
+                        <Setter Property="TranslateTransform.Y" Value="0"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+        <!-- Error shake -->
+        <Style Selector="Border.shake">
+            <Style.Animations>
+                <Animation Duration="0:0:0.4" FillMode="None">
+                    <KeyFrame Cue="0%">   <Setter Property="TranslateTransform.X" Value="0"/></KeyFrame>
+                    <KeyFrame Cue="14%">  <Setter Property="TranslateTransform.X" Value="-8"/></KeyFrame>
+                    <KeyFrame Cue="28%">  <Setter Property="TranslateTransform.X" Value="8"/></KeyFrame>
+                    <KeyFrame Cue="42%">  <Setter Property="TranslateTransform.X" Value="-6"/></KeyFrame>
+                    <KeyFrame Cue="56%">  <Setter Property="TranslateTransform.X" Value="6"/></KeyFrame>
+                    <KeyFrame Cue="70%">  <Setter Property="TranslateTransform.X" Value="-4"/></KeyFrame>
+                    <KeyFrame Cue="84%">  <Setter Property="TranslateTransform.X" Value="4"/></KeyFrame>
+                    <KeyFrame Cue="100%"> <Setter Property="TranslateTransform.X" Value="0"/></KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+        <!-- ═══ SPLASH ANIMATIONS ═══ -->
+
+        <!-- Login form fade-out when splash begins -->
+        <Style Selector="StackPanel.login-content.fade-out">
+            <Style.Animations>
+                <Animation Duration="0:0:0.35" FillMode="Forward" Easing="CubicEaseIn">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="1"/>
+                        <Setter Property="ScaleTransform.ScaleX" Value="1"/>
+                        <Setter Property="ScaleTransform.ScaleY" Value="1"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="0"/>
+                        <Setter Property="ScaleTransform.ScaleX" Value="0.95"/>
+                        <Setter Property="ScaleTransform.ScaleY" Value="0.95"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+        <!-- Splash panel fade-in -->
+        <Style Selector="StackPanel.splash-panel.active">
+            <Style.Animations>
+                <Animation Duration="0:0:0.5" FillMode="Forward" Delay="0:0:0.3" Easing="CubicEaseOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+        <!-- Splash logo scale-up with bounce -->
+        <Style Selector="Border.splash-logo.active">
+            <Style.Animations>
+                <Animation Duration="0:0:1.1" FillMode="Forward" Delay="0:0:0.3" Easing="BackEaseOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="0.3"/>
+                        <Setter Property="ScaleTransform.ScaleY" Value="0.3"/>
+                        <Setter Property="Opacity" Value="0"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="60%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="1.08"/>
+                        <Setter Property="ScaleTransform.ScaleY" Value="1.08"/>
+                        <Setter Property="Opacity" Value="1"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="1"/>
+                        <Setter Property="ScaleTransform.ScaleY" Value="1"/>
+                        <Setter Property="Opacity" Value="1"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+        <!-- Splash logo glow ring pulse -->
+        <Style Selector="Border.glow-ring.active">
+            <Style.Animations>
+                <Animation Duration="0:0:1.8" FillMode="Forward" Delay="0:0:0.4"
+                           IterationCount="Infinite" Easing="SineEaseInOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="1"/>
+                        <Setter Property="ScaleTransform.ScaleY" Value="1"/>
+                        <Setter Property="Opacity" Value="0.5"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="50%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="1.5"/>
+                        <Setter Property="ScaleTransform.ScaleY" Value="1.5"/>
+                        <Setter Property="Opacity" Value="0"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="1"/>
+                        <Setter Property="ScaleTransform.ScaleY" Value="1"/>
+                        <Setter Property="Opacity" Value="0.5"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+        <!-- Splash title fade-in -->
+        <Style Selector="TextBlock.splash-title.active">
+            <Style.Animations>
+                <Animation Duration="0:0:0.8" FillMode="Forward" Delay="0:0:0.8" Easing="CubicEaseOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0"/>
+                        <Setter Property="TranslateTransform.Y" Value="10"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1"/>
+                        <Setter Property="TranslateTransform.Y" Value="0"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </Window.Styles>
+
+    <Grid>
+        <!-- Background -->
+        <Border Background="#2c2418"/>
+
+        <!-- ═══ LOGIN CONTENT (hidden when splash) ═══ -->
+        <StackPanel x:Name="LoginContent"
+                    Classes="login-content"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="0"
+                    IsVisible="{Binding !ShowSplash}">
+
+            <!-- Logo above card -->
+            <StackPanel Classes="logo-panel"
+                        HorizontalAlignment="Center"
+                        Spacing="8"
+                        Margin="0,0,0,28">
+                <Border Width="52" Height="52"
+                        CornerRadius="14"
+                        Background="#c45d2c"
+                        HorizontalAlignment="Center">
+                    <TextBlock Text="W"
+                               FontSize="28" FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Border>
+                <TextBlock Text="Wolf"
+                           FontSize="22" FontWeight="Bold"
+                           Foreground="White"
+                           HorizontalAlignment="Center"
+                           LetterSpacing="-0.5"/>
+            </StackPanel>
+
+            <!-- Login Card -->
+            <Border Classes="login-card"
+                    x:Name="LoginCard"
+                    Background="White"
+                    CornerRadius="12"
+                    Width="360"
+                    Padding="36,32">
+                <StackPanel Spacing="20">
+
+                    <!-- Card heading -->
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Вход"
+                                   FontSize="20" FontWeight="Bold"
+                                   Foreground="#2c2418"/>
+                        <TextBlock Text="Въведете вашите данни за достъп"
+                                   FontSize="12"
+                                   Foreground="#7a6f60"/>
+                    </StackPanel>
+
+                    <!-- Form fields -->
+                    <StackPanel Spacing="12">
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Потребителско име"
+                                       FontSize="12" FontWeight="Medium"
+                                       Foreground="#2c2418"/>
+                            <TextBox Text="{Binding Username}"
+                                     Watermark="Въведете потребителско име"
+                                     FontSize="13"
+                                     Height="38"
+                                     CornerRadius="6"
+                                     Background="#faf8f5"
+                                     BorderBrush="#e2ddd5"
+                                     Padding="10,0"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Парола"
+                                       FontSize="12" FontWeight="Medium"
+                                       Foreground="#2c2418"/>
+                            <TextBox x:Name="PasswordBox"
+                                     Text="{Binding Password}"
+                                     Watermark="Въведете парола"
+                                     PasswordChar="●"
+                                     FontSize="13"
+                                     Height="38"
+                                     CornerRadius="6"
+                                     Background="#faf8f5"
+                                     BorderBrush="#e2ddd5"
+                                     Padding="10,0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Error message -->
+                    <Border IsVisible="{Binding HasError}"
+                            Background="#fceaea"
+                            CornerRadius="6"
+                            Padding="12,8">
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   Foreground="#b83232"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+
+                    <!-- Login button -->
+                    <Button IsEnabled="{Binding IsBusy, Converter={x:Static BoolConverters.Not}}"
+                            Command="{Binding LoginCommand}"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Height="40"
+                            FontSize="13" FontWeight="SemiBold"
+                            CornerRadius="6"
+                            Background="#c45d2c"
+                            Foreground="White"
+                            BorderThickness="0">
+                        <Panel>
+                            <TextBlock Text="Вход"
+                                       IsVisible="{Binding IsBusy, Converter={x:Static BoolConverters.Not}}"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Влизане..."
+                                       IsVisible="{Binding IsBusy}"
+                                       HorizontalAlignment="Center"/>
+                        </Panel>
+                    </Button>
+
+                </StackPanel>
+            </Border>
+
+            <!-- Version -->
+            <TextBlock Text="Wolf Десктоп v1.0"
+                       FontSize="10"
+                       Foreground="#59ffffff"
+                       HorizontalAlignment="Center"
+                       Margin="0,16,0,0"/>
+        </StackPanel>
+
+        <!-- ═══ SPLASH SCREEN (shown after auth) ═══ -->
+        <StackPanel x:Name="SplashPanel"
+                    Classes="splash-panel"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="0"
+                    IsVisible="{Binding ShowSplash}"
+                    Opacity="0">
+
+            <!-- Logo with glow ring -->
+            <Panel HorizontalAlignment="Center"
+                   Width="160" Height="160"
+                   Margin="0,0,0,28">
+                <!-- Pulsing glow ring behind logo -->
+                <Border x:Name="GlowRing"
+                        Classes="glow-ring"
+                        Width="160" Height="160"
+                        CornerRadius="80"
+                        Background="#44c45d2c"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Opacity="0"
+                        RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform>
+                        <ScaleTransform/>
+                    </Border.RenderTransform>
+                </Border>
+
+                <!-- Main logo -->
+                <Border x:Name="SplashLogo"
+                        Classes="splash-logo"
+                        Width="120" Height="120"
+                        CornerRadius="30"
+                        Background="#c45d2c"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Opacity="0"
+                        RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform>
+                        <ScaleTransform/>
+                    </Border.RenderTransform>
+                    <TextBlock Text="W"
+                               FontSize="64" FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Border>
+            </Panel>
+
+            <!-- App name -->
+            <TextBlock x:Name="SplashTitle"
+                       Classes="splash-title"
+                       Text="Wolf"
+                       FontSize="32" FontWeight="Bold"
+                       Foreground="White"
+                       HorizontalAlignment="Center"
+                       LetterSpacing="-0.5"
+                       Opacity="0">
+                <TextBlock.RenderTransform>
+                    <TranslateTransform/>
+                </TextBlock.RenderTransform>
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Drag region for borderless window -->
+        <Border Background="Transparent"
+                Height="40"
+                VerticalAlignment="Top"
+                IsHitTestVisible="True"
+                x:Name="DragRegion"/>
+    </Grid>
+</Window>

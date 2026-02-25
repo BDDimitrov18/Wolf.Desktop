@@ -1,0 +1,11 @@
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/bin/Debug/net8.0/Wolf.Dtos.deps.json
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/bin/Debug/net8.0/Wolf.Dtos.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/bin/Debug/net8.0/Wolf.Dtos.pdb
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/Wolf.Dtos.GeneratedMSBuildEditorConfig.editorconfig
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/Wolf.Dtos.AssemblyInfoInputs.cache
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/Wolf.Dtos.AssemblyInfo.cs
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/Wolf.Dtos.csproj.CoreCompileInputs.cache
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/Wolf.Dtos.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/refint/Wolf.Dtos.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/Wolf.Dtos.pdb
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/ref/Wolf.Dtos.dll

@@ -1,0 +1,304 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             xmlns:dto="using:Wolf.Dtos"
+             xmlns:conv="using:Wolf.Desktop.Converters"
+             x:Class="Wolf.Desktop.Views.DashboardView"
+             x:CompileBindings="False">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,20,28,28" Spacing="20">
+
+            <!-- ===== HEADER ===== -->
+            <TextBlock Text="Табло" FontSize="20" FontWeight="Bold"/>
+
+            <!-- ===== SUMMARY CARDS ROW ===== -->
+            <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                <!-- Total Orders -->
+                <Border Grid.Column="0" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="18,14">
+                    <StackPanel>
+                        <TextBlock Text="ОБЩО ПОРЪЧКИ" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                        <TextBlock Text="{Binding TotalOrders}"
+                                   FontSize="28" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Margin="0,6,0,0"/>
+                        <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,8,0,0">
+                            <TextBlock FontSize="11">
+                                <Run Text="{Binding ActiveOrders}" Foreground="#3a7d44" FontWeight="SemiBold"/>
+                                <Run Text=" активни" Foreground="{StaticResource BrushTextMuted}"/>
+                            </TextBlock>
+                            <TextBlock FontSize="11">
+                                <Run Text="{Binding ArchivedOrders}" Foreground="#3b6fa0" FontWeight="SemiBold"/>
+                                <Run Text=" архивирани" Foreground="{StaticResource BrushTextMuted}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Total Revenue -->
+                <Border Grid.Column="2" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="18,14">
+                    <StackPanel>
+                        <TextBlock Text="Обща цена" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                        <TextBlock Text="{Binding TotalRevenue, StringFormat='{}{0:N0} BGN'}"
+                                   FontSize="28" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Foreground="#3a7d44"
+                                   Margin="0,6,0,0"/>
+                        <TextBlock FontSize="11" Margin="0,8,0,0">
+                            <Run Text="Аванс: " Foreground="{StaticResource BrushTextMuted}"/>
+                            <Run Text="{Binding TotalAdvance, StringFormat='{}{0:N0} BGN'}" FontWeight="SemiBold"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- Clients -->
+                <Border Grid.Column="4" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="18,14">
+                    <StackPanel>
+                        <TextBlock Text="КЛИЕНТИ" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                        <TextBlock Text="{Binding TotalClients}"
+                                   FontSize="28" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Foreground="#3b6fa0"
+                                   Margin="0,6,0,0"/>
+                        <TextBlock FontSize="11" Margin="0,8,0,0">
+                            <Run Text="{Binding TotalPlots}" Foreground="{StaticResource BrushTextSecondary}" FontWeight="SemiBold"/>
+                            <Run Text=" имота регистрирани" Foreground="{StaticResource BrushTextMuted}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- Outstanding -->
+                <Border Grid.Column="6" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="18,14">
+                    <StackPanel>
+                        <TextBlock Text="ОСТАВАЩО" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                        <TextBlock Text="{Binding Outstanding, StringFormat='{}{0:N0} BGN'}"
+                                   FontSize="28" FontWeight="Bold"
+                                   FontFamily="IBM Plex Mono, Consolas"
+                                   Foreground="#b83232"
+                                   Margin="0,6,0,0"/>
+                        <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,8,0,0">
+                            <TextBlock FontSize="11">
+                                <Run Text="{Binding PaidOrders}" Foreground="#3a7d44" FontWeight="SemiBold"/>
+                                <Run Text=" платени" Foreground="{StaticResource BrushTextMuted}"/>
+                            </TextBlock>
+                            <TextBlock FontSize="11">
+                                <Run Text="{Binding UnpaidOrders}" Foreground="#b83232" FontWeight="SemiBold"/>
+                                <Run Text=" неплатени" Foreground="{StaticResource BrushTextMuted}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ===== STATUS BREAKDOWN + TOP EMPLOYEES ===== -->
+            <Grid ColumnDefinitions="*,16,*">
+
+                <!-- Status Breakdown -->
+                <Border Grid.Column="0" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="20">
+                    <StackPanel Spacing="14">
+                        <TextBlock Text="РАЗБИВКА ПО СТАТУС" FontSize="11" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+
+                        <!-- Active bar -->
+                        <StackPanel Spacing="4">
+                            <Grid ColumnDefinitions="80,*,Auto">
+                                <TextBlock Text="Активни" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <Border Grid.Column="1" Background="#e8e4de" CornerRadius="4" Height="12">
+                                    <Border Background="#3a7d44" CornerRadius="4" Height="12"
+                                            HorizontalAlignment="Left"
+                                            Width="{Binding ActivePercent, FallbackValue=0}"
+                                            MaxWidth="300"/>
+                                </Border>
+                                <TextBlock Grid.Column="2" Text="{Binding ActiveOrders}"
+                                           FontFamily="IBM Plex Mono, Consolas"
+                                           FontSize="12" FontWeight="Bold"
+                                           Foreground="#3a7d44" Margin="8,0,0,0"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Archived bar -->
+                        <StackPanel Spacing="4">
+                            <Grid ColumnDefinitions="80,*,Auto">
+                                <TextBlock Text="Архивирани" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <Border Grid.Column="1" Background="#e8e4de" CornerRadius="4" Height="12">
+                                    <Border Background="#3b6fa0" CornerRadius="4" Height="12"
+                                            HorizontalAlignment="Left"
+                                            Width="{Binding ArchivedPercent, FallbackValue=0}"
+                                            MaxWidth="300"/>
+                                </Border>
+                                <TextBlock Grid.Column="2" Text="{Binding ArchivedOrders}"
+                                           FontFamily="IBM Plex Mono, Consolas"
+                                           FontSize="12" FontWeight="Bold"
+                                           Foreground="#3b6fa0" Margin="8,0,0,0"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Financial summary row -->
+                        <Rectangle Height="1" Fill="{StaticResource BrushBorder}" Margin="0,4"/>
+                        <Grid ColumnDefinitions="*,*">
+                            <StackPanel>
+                                <TextBlock Text="ФАКТУРИРАНО" FontSize="9" FontWeight="Bold"
+                                           Foreground="{StaticResource BrushTextMuted}"/>
+                                <TextBlock Text="{Binding TotalInvoiced, StringFormat='{}{0:N0} BGN'}"
+                                           FontFamily="IBM Plex Mono, Consolas"
+                                           FontSize="14" FontWeight="Bold" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="ДЕЙНОСТИ" FontSize="9" FontWeight="Bold"
+                                           Foreground="{StaticResource BrushTextMuted}"/>
+                                <TextBlock Text="{Binding TotalActivities}"
+                                           FontFamily="IBM Plex Mono, Consolas"
+                                           FontSize="14" FontWeight="Bold" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Top Employees -->
+                <Border Grid.Column="2" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="20">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="ТОП СЛУЖИТЕЛИ ПО ДЕЙНОСТИ" FontSize="11" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+
+                        <ItemsControl ItemsSource="{Binding TopEmployees}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="vm:EmployeeStatViewModel">
+                                    <Border Padding="8,8"
+                                            Margin="0,0,0,4"
+                                            Background="{StaticResource BrushSurfaceAlt}"
+                                            CornerRadius="6">
+                                        <Grid ColumnDefinitions="Auto,*,Auto">
+                                            <Border Width="32" Height="32" CornerRadius="16"
+                                                    Background="{StaticResource BrushAccent}"
+                                                    Margin="0,0,10,0">
+                                                <TextBlock Text="{Binding EmployeeId, StringFormat='#{0}'}"
+                                                           FontSize="10" FontWeight="Bold"
+                                                           Foreground="White"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Name}"
+                                                           FontSize="12.5" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center"
+                                                        HorizontalAlignment="Right">
+                                                <TextBlock Text="{Binding ActivityCount, StringFormat='{}{0} дейности'}"
+                                                           FontSize="11"
+                                                           Foreground="{StaticResource BrushTextSecondary}"
+                                                           FontFamily="IBM Plex Mono, Consolas"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ===== INTERACTIVE: ORDERS BY STATUS ===== -->
+            <Border Background="{StaticResource BrushSurface}"
+                    BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                    CornerRadius="10" Padding="20">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Text="ПОСЛЕДНИ ПОРЪЧКИ" FontSize="11" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"
+                                   VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                            <ItemsControl ItemsSource="{Binding StatusFilters}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="4"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Classes="sm"
+                                                Content="{Binding}"
+                                                Command="{Binding $parent[UserControl].DataContext.SetStatusFilterCommand}"
+                                                CommandParameter="{Binding}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Header -->
+                    <Grid ColumnDefinitions="50,*,80,100,80"
+                          Background="{StaticResource BrushSurfaceAlt}"
+                          Height="28" Margin="0,4,0,0">
+                        <TextBlock Grid.Column="0" Text="ИД" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="8,0"/>
+                        <TextBlock Grid.Column="1" Text="ИМЕ" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBlock Grid.Column="2" Text="СТАТУС" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBlock Grid.Column="3" Text="ПЛАЩАНЕ" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBlock Grid.Column="4" Text="ЦЕНА" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="4,0"/>
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding StatusFilteredOrders}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="dto:RequestDto">
+                                <StackPanel>
+                                    <Grid ColumnDefinitions="50,*,80,100,80"
+                                          MinHeight="34" Background="Transparent">
+                                        <Grid.Styles>
+                                            <Style Selector="Grid:pointerover">
+                                                <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}"/>
+                                            </Style>
+                                        </Grid.Styles>
+                                        <TextBlock Grid.Column="0" Text="{Binding Requestid}"
+                                                   FontFamily="IBM Plex Mono, Consolas"
+                                                   Foreground="{StaticResource BrushTextMuted}"
+                                                   FontSize="11" VerticalAlignment="Center" Margin="8,0"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Requestname}"
+                                                   FontSize="12" FontWeight="SemiBold"
+                                                   VerticalAlignment="Center" Margin="4,0"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <Border Grid.Column="2" CornerRadius="12" Padding="8,2"
+                                                Margin="4,0" VerticalAlignment="Center" HorizontalAlignment="Left"
+                                                Background="{Binding Status, Converter={x:Static conv:StatusBgConverter.Instance}}">
+                                            <TextBlock Text="{Binding Status}" FontSize="10" FontWeight="SemiBold"
+                                                       Foreground="{Binding Status, Converter={x:Static conv:StatusFgConverter.Instance}}"/>
+                                        </Border>
+                                        <TextBlock Grid.Column="3" Text="{Binding Paymentstatus}"
+                                                   Foreground="{StaticResource BrushTextSecondary}"
+                                                   FontSize="11" VerticalAlignment="Center" Margin="4,0"/>
+                                        <TextBlock Grid.Column="4"
+                                                   Text="{Binding Price, StringFormat='{}{0:N0}'}"
+                                                   FontFamily="IBM Plex Mono, Consolas"
+                                                   FontSize="11" VerticalAlignment="Center" Margin="4,0"/>
+                                    </Grid>
+                                    <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

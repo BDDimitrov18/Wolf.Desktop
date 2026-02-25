@@ -1,0 +1,153 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             xmlns:conv="using:Wolf.Desktop.Converters"
+             x:Class="Wolf.Desktop.Views.EditTaskView"
+             x:CompileBindings="False"
+             Background="{StaticResource BrushSurface}">
+
+    <UserControl.Resources>
+        <conv:EmployeeNameConverter x:Key="EmployeeNameConverter"/>
+        <conv:NullableEmployeeNameConverter x:Key="NullableEmployeeNameConverter"/>
+    </UserControl.Resources>
+
+    <ScrollViewer>
+        <StackPanel Spacing="0" MaxWidth="720" Margin="32">
+
+            <TextBlock Text="{Binding FormTitle}"
+                       FontSize="20" FontWeight="Bold"
+                       Margin="0,0,0,28"/>
+
+            <Border IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Background="#fceaea"
+                    CornerRadius="6"
+                    Padding="14,10"
+                    Margin="0,0,0,16">
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="#b83232" FontSize="12"/>
+            </Border>
+
+            <Border Background="{StaticResource BrushSurfaceAlt}"
+                    CornerRadius="8"
+                    Padding="24"
+                    Margin="0,0,0,16">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="ДЕТАЙЛИ НА ЗАДАЧА"
+                               FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               LetterSpacing="1"/>
+
+                    <Grid ColumnDefinitions="*,16,*">
+                        <!-- Task Type — AutoCompleteBox -->
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Задача" FontSize="12" FontWeight="Medium"/>
+                            <AutoCompleteBox x:Name="TaskTypeBox"
+                                             ItemsSource="{Binding AvailableTaskTypes}"
+                                             SelectedItem="{Binding SelectedTaskType}"
+                                             Text="{Binding TaskTypeSearchText, Mode=TwoWay}"
+                                             ValueMemberBinding="{Binding Tasktypename}"
+                                             FilterMode="Custom"
+                                             MinimumPrefixLength="0"
+                                             Watermark="Въведете или изберете тип..."/>
+                        </StackPanel>
+
+                        <!-- Status — ComboBox -->
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Статус" FontSize="12" FontWeight="Medium"/>
+                            <ComboBox ItemsSource="{x:Static vm:EditTaskViewModel.StatusOptions}"
+                                      SelectedItem="{Binding Status}"
+                                      HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,16,*">
+                        <!-- Executant — ComboBox -->
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Изпълнител" FontSize="12" FontWeight="Medium"/>
+                            <ComboBox ItemsSource="{Binding AvailableEmployees}"
+                                      SelectedItem="{Binding SelectedExecutant}"
+                                      HorizontalAlignment="Stretch"
+                                      PlaceholderText="Изберете служител...">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ., Converter={StaticResource EmployeeNameConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <!-- Controller — ComboBox with "Няма контрол" -->
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Контрол" FontSize="12" FontWeight="Medium"/>
+                            <ComboBox ItemsSource="{Binding AvailableControllers}"
+                                      SelectedItem="{Binding SelectedController}"
+                                      HorizontalAlignment="Stretch"
+                                      PlaceholderText="Няма контрол">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ., Converter={StaticResource NullableEmployeeNameConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Заплащане на изпълнител (лв.)" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Text="{Binding Executantpayment}" Watermark="0.00"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Такса" FontSize="12" FontWeight="Medium"/>
+                            <TextBox Text="{Binding Tax}" Watermark="0.00"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Коментар такса" FontSize="12" FontWeight="Medium"/>
+                        <TextBox Text="{Binding Commenttax}" Watermark="Коментар за такса..."/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Времетраене" FontSize="12" FontWeight="Medium"/>
+                        <TimePicker SelectedTime="{Binding Duration}"
+                                    HorizontalAlignment="Stretch"
+                                    ClockIdentifier="24HourClock"/>
+                    </StackPanel>
+
+                    <Grid ColumnDefinitions="*,16,*">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Начална дата" FontSize="12" FontWeight="Medium"/>
+                            <CalendarDatePicker SelectedDate="{Binding Startdate}"
+                                                HorizontalAlignment="Stretch"
+                                                Watermark="Изберете дата..."/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Крайна дата" FontSize="12" FontWeight="Medium"/>
+                            <CalendarDatePicker SelectedDate="{Binding Finishdate}"
+                                                HorizontalAlignment="Stretch"
+                                                Watermark="Изберете дата..."/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Коментари" FontSize="12" FontWeight="Medium"/>
+                        <TextBox Text="{Binding Comments}"
+                                 AcceptsReturn="True"
+                                 Height="80"
+                                 Watermark="Незадължителни коментари..."/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Classes="primary"
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={x:Static BoolConverters.Not}}">
+                    Запази задача
+                </Button>
+                <Button Command="{Binding CancelCommand}">Отказ</Button>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
