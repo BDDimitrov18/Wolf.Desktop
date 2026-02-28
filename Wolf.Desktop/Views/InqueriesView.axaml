@@ -1,0 +1,199 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Wolf.Desktop.ViewModels"
+             x:Class="Wolf.Desktop.Views.InqueriesView"
+             x:CompileBindings="False">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,20,28,28" Spacing="20">
+
+            <!-- ===== HEADER ===== -->
+            <TextBlock Text="Справки" FontSize="20" FontWeight="Bold"/>
+
+            <!-- ===== MAIN 3-COLUMN LAYOUT ===== -->
+            <Grid ColumnDefinitions="*,16,*,16,Auto">
+
+                <!-- ═══ LEFT PANEL: Dates + Employees + Payment Status ═══ -->
+                <StackPanel Grid.Column="0" Spacing="16">
+
+                    <!-- Date Range -->
+                    <Border Background="{StaticResource BrushSurface}"
+                            BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                            CornerRadius="10" Padding="16">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="ПЕРИОД" FontSize="10" FontWeight="Bold"
+                                       Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                            <Grid ColumnDefinitions="Auto,8,*">
+                                <TextBlock Text="От:" FontSize="12" VerticalAlignment="Center"/>
+                                <DatePicker Grid.Column="2" SelectedDate="{Binding DateFrom}"
+                                            MinWidth="160"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="Auto,8,*">
+                                <TextBlock Text="До:" FontSize="12" VerticalAlignment="Center"/>
+                                <DatePicker Grid.Column="2" SelectedDate="{Binding DateTo}"
+                                            MinWidth="160"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Employees (Admin only) -->
+                    <Border Background="{StaticResource BrushSurface}"
+                            BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                            CornerRadius="10" Padding="16"
+                            IsVisible="{Binding IsAdmin}">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="СЛУЖИТЕЛИ" FontSize="10" FontWeight="Bold"
+                                       Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                            <CheckBox Content="Всички" IsChecked="{Binding AllEmployeesChecked}"
+                                      FontWeight="SemiBold" FontSize="12"/>
+                            <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                            <ScrollViewer MaxHeight="180" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding Employees}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="vm:CheckableItemViewModel">
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked}"
+                                                      FontSize="12" Margin="0,1"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Payment Status -->
+                    <Border Background="{StaticResource BrushSurface}"
+                            BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                            CornerRadius="10" Padding="16">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="СТАТУС НА ПЛАЩАНЕ" FontSize="10" FontWeight="Bold"
+                                       Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                            <CheckBox Content="Всички" IsChecked="{Binding AllPaymentStatusChecked}"
+                                      FontWeight="SemiBold" FontSize="12"/>
+                            <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                            <ItemsControl ItemsSource="{Binding PaymentStatuses}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="vm:CheckableItemViewModel">
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked}"
+                                                  FontSize="12" Margin="0,1"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Task Status -->
+                    <Border Background="{StaticResource BrushSurface}"
+                            BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                            CornerRadius="10" Padding="16">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="СТАТУС НА ЗАДАЧИ" FontSize="10" FontWeight="Bold"
+                                       Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                            <CheckBox Content="Всички" IsChecked="{Binding AllTaskStatusChecked}"
+                                      FontWeight="SemiBold" FontSize="12"/>
+                            <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                            <ItemsControl ItemsSource="{Binding TaskStatuses}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="vm:CheckableItemViewModel">
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked}"
+                                                  FontSize="12" Margin="0,1"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ═══ CENTER PANEL: Activity Types + Task Types ═══ -->
+                <StackPanel Grid.Column="2" Spacing="16">
+
+                    <!-- Activity Types -->
+                    <Border Background="{StaticResource BrushSurface}"
+                            BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                            CornerRadius="10" Padding="16">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="ВИДОВЕ ДЕЙНОСТИ" FontSize="10" FontWeight="Bold"
+                                       Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                            <TextBox Watermark="Търсене..." Text="{Binding ActivityTypeSearch}"
+                                     FontSize="12"/>
+                            <CheckBox Content="Всички" IsChecked="{Binding AllActivityTypesChecked}"
+                                      FontWeight="SemiBold" FontSize="12"/>
+                            <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                            <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding FilteredActivityTypes}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="vm:CheckableItemViewModel">
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked}"
+                                                      FontSize="12" Margin="0,1"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Task Types -->
+                    <Border Background="{StaticResource BrushSurface}"
+                            BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                            CornerRadius="10" Padding="16">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="ВИДОВЕ ЗАДАЧИ" FontSize="10" FontWeight="Bold"
+                                       Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                            <TextBox Watermark="Търсене..." Text="{Binding TaskTypeSearch}"
+                                     FontSize="12"/>
+                            <CheckBox Content="Всички" IsChecked="{Binding AllTaskTypesChecked}"
+                                      FontWeight="SemiBold" FontSize="12"/>
+                            <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+                            <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding FilteredTaskTypes}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="vm:CheckableItemViewModel">
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked}"
+                                                      FontSize="12" Margin="0,1"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ═══ RIGHT PANEL: Inquiry Buttons ═══ -->
+                <Border Grid.Column="4" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="20" MinWidth="260"
+                        VerticalAlignment="Top">
+                    <StackPanel Spacing="14">
+                        <TextBlock Text="СПРАВКИ" FontSize="10" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+
+                        <Button Classes="accent" Content="Справка оборот на Задачи"
+                                Command="{Binding RunAllTasksInquiryCommand}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Padding="16,12" FontSize="13"/>
+
+                        <Button Classes="accent" Content="Справка задължения"
+                                Command="{Binding RunObligationsInquiryCommand}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Padding="16,12" FontSize="13"/>
+
+                        <Button Classes="accent" Content="Справка плащания по вид задача"
+                                Command="{Binding RunTaskTypePaymentInquiryCommand}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Padding="16,12" FontSize="13"/>
+
+                        <Button Classes="accent" Content="Месечна справка"
+                                Command="{Binding RunMonthlyInquiryCommand}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Padding="16,12" FontSize="13"/>
+
+                        <Rectangle Height="1" Fill="{StaticResource BrushBorder}" Margin="0,4"/>
+
+                        <TextBlock Text="Изберете филтри отляво и натиснете бутон за генериране на Excel справка."
+                                   FontSize="11" Foreground="{StaticResource BrushTextMuted}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
