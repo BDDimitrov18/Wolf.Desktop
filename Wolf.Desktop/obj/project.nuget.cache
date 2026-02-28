@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Qu3RPRIRPIo=",
+  "dgSpecHash": "OMYgOBNQ7fA=",
   "success": true,
   "projectFilePath": "/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Wolf.Desktop.csproj",
   "expectedPackageFiles": [
@@ -29,6 +29,8 @@
     "/Users/bozhidardimitrov/.nuget/packages/dock.model/11.3.11.13/dock.model.11.3.11.13.nupkg.sha512",
     "/Users/bozhidardimitrov/.nuget/packages/dock.model.mvvm/11.3.11.13/dock.model.mvvm.11.3.11.13.nupkg.sha512",
     "/Users/bozhidardimitrov/.nuget/packages/dock.settings/11.3.11.13/dock.settings.11.3.11.13.nupkg.sha512",
+    "/Users/bozhidardimitrov/.nuget/packages/documentformat.openxml/3.4.1/documentformat.openxml.3.4.1.nupkg.sha512",
+    "/Users/bozhidardimitrov/.nuget/packages/documentformat.openxml.framework/3.4.1/documentformat.openxml.framework.3.4.1.nupkg.sha512",
     "/Users/bozhidardimitrov/.nuget/packages/harfbuzzsharp/8.3.1.1/harfbuzzsharp.8.3.1.1.nupkg.sha512",
     "/Users/bozhidardimitrov/.nuget/packages/harfbuzzsharp.nativeassets.linux/8.3.1.1/harfbuzzsharp.nativeassets.linux.8.3.1.1.nupkg.sha512",
     "/Users/bozhidardimitrov/.nuget/packages/harfbuzzsharp.nativeassets.macos/8.3.1.1/harfbuzzsharp.nativeassets.macos.8.3.1.1.nupkg.sha512",
@@ -67,6 +69,7 @@
     "/Users/bozhidardimitrov/.nuget/packages/skiasharp.nativeassets.win32/2.88.9/skiasharp.nativeassets.win32.2.88.9.nupkg.sha512",
     "/Users/bozhidardimitrov/.nuget/packages/system.diagnostics.diagnosticsource/8.0.0/system.diagnostics.diagnosticsource.8.0.0.nupkg.sha512",
     "/Users/bozhidardimitrov/.nuget/packages/system.identitymodel.tokens.jwt/7.7.1/system.identitymodel.tokens.jwt.7.7.1.nupkg.sha512",
+    "/Users/bozhidardimitrov/.nuget/packages/system.io.packaging/8.0.1/system.io.packaging.8.0.1.nupkg.sha512",
     "/Users/bozhidardimitrov/.nuget/packages/system.io.pipelines/8.0.0/system.io.pipelines.8.0.0.nupkg.sha512",
     "/Users/bozhidardimitrov/.nuget/packages/system.threading.channels/8.0.0/system.threading.channels.8.0.0.nupkg.sha512",
     "/Users/bozhidardimitrov/.nuget/packages/tmds.dbus.protocol/0.21.2/tmds.dbus.protocol.0.21.2.nupkg.sha512"

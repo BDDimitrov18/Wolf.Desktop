@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Wolf.Desktop.ViewModels"
              xmlns:dto="using:Wolf.Dtos"
+             xmlns:conv="using:Wolf.Desktop.Converters"
              x:Class="Wolf.Desktop.Views.UserProfileView"
              x:CompileBindings="False">
 
@@ -45,51 +46,46 @@
                 </Grid>
             </Border>
 
-            <!-- ===== PROJECTED SALARY CARD ===== -->
-            <Border Background="{StaticResource BrushAccent}"
-                    CornerRadius="12" Padding="24,20">
-                <Grid ColumnDefinitions="*,Auto">
-                    <StackPanel>
-                        <TextBlock Text="{Binding CurrentMonth, StringFormat='ПРОГНОЗНА ЗАПЛАТА — {0}'}"
-                                   FontSize="10" FontWeight="Bold"
-                                   Foreground="#ccffffff" LetterSpacing="0.5"/>
-                        <TextBlock Text="{Binding ProjectedSalary, StringFormat='{}{0:N2} лв.'}"
-                                   FontSize="34" FontWeight="Bold"
-                                   Foreground="White"
-                                   FontFamily="IBM Plex Mono, Consolas"
-                                   Margin="0,6,0,0"/>
-                        <TextBlock FontSize="11" Margin="0,6,0,0" Foreground="#bbffffff">
-                            <Run Text="На база"/>
-                            <Run Text="{Binding CompletedTasksThisMonth}" FontWeight="Bold"/>
-                            <Run Text="завършени задачи от"/>
-                            <Run Text="{Binding TasksThisMonth}" FontWeight="Bold"/>
-                            <Run Text="този месец"/>
-                        </TextBlock>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center"
-                                HorizontalAlignment="Right">
-                        <TextBlock Text="ОТ НАЧАЛОТО" FontSize="9" FontWeight="Bold"
-                                   Foreground="#88ffffff" HorizontalAlignment="Right"/>
-                        <TextBlock Text="{Binding TotalEarnedAllTime, StringFormat='{}{0:N2} лв.'}"
-                                   FontSize="18" FontWeight="Bold"
-                                   Foreground="White"
-                                   FontFamily="IBM Plex Mono, Consolas"
-                                   HorizontalAlignment="Right"
-                                   Margin="0,2,0,0"/>
+            <!-- ===== PERIOD SELECTOR ===== -->
+            <Border Background="{StaticResource BrushSurface}"
+                    BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                    CornerRadius="10" Padding="16,10">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <TextBlock Text="ПЕРИОД" FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" Text="{Binding PeriodLabel}"
+                               FontSize="12" FontWeight="SemiBold"
+                               Foreground="{StaticResource BrushTextSecondary}"
+                               VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4"
+                                HorizontalAlignment="Center">
+                        <Button Classes="sm" Content="Този месец"
+                                Command="{Binding SetPeriodCommand}" CommandParameter="this-month"
+                                Background="{Binding SelectedPeriodKey, Converter={x:Static conv:PeriodBgConverter.Instance}, ConverterParameter=this-month}"/>
+                        <Button Classes="sm" Content="Миналият месец"
+                                Command="{Binding SetPeriodCommand}" CommandParameter="last-month"
+                                Background="{Binding SelectedPeriodKey, Converter={x:Static conv:PeriodBgConverter.Instance}, ConverterParameter=last-month}"/>
+                        <Button Classes="sm" Content="Последни 3 месеца"
+                                Command="{Binding SetPeriodCommand}" CommandParameter="last-3-months"
+                                Background="{Binding SelectedPeriodKey, Converter={x:Static conv:PeriodBgConverter.Instance}, ConverterParameter=last-3-months}"/>
+                        <Button Classes="sm" Content="Цялото време"
+                                Command="{Binding SetPeriodCommand}" CommandParameter="all-time"
+                                Background="{Binding SelectedPeriodKey, Converter={x:Static conv:PeriodBgConverter.Instance}, ConverterParameter=all-time}"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- ===== MONTHLY STATS ROW ===== -->
+            <!-- ===== PERIOD STATS ROW ===== -->
             <Grid ColumnDefinitions="*,12,*,12,*,12,*">
-                <!-- Tasks This Month -->
+                <!-- Tasks -->
                 <Border Grid.Column="0" Background="{StaticResource BrushSurface}"
                         BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
                         CornerRadius="10" Padding="16,14">
                     <StackPanel>
-                        <TextBlock Text="ЗАДАЧИ ТОЗИ МЕСЕЦ" FontSize="9" FontWeight="Bold"
+                        <TextBlock Text="ЗАДАЧИ" FontSize="9" FontWeight="Bold"
                                    Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
-                        <TextBlock Text="{Binding TasksThisMonth}"
+                        <TextBlock Text="{Binding TasksPeriod}"
                                    FontSize="26" FontWeight="Bold"
                                    FontFamily="IBM Plex Mono, Consolas"
                                    Margin="0,4,0,0"/>
@@ -103,7 +99,7 @@
                     <StackPanel>
                         <TextBlock Text="ЗАВЪРШЕНИ" FontSize="9" FontWeight="Bold"
                                    Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
-                        <TextBlock Text="{Binding CompletedTasksThisMonth}"
+                        <TextBlock Text="{Binding CompletedTasksPeriod}"
                                    FontSize="26" FontWeight="Bold"
                                    FontFamily="IBM Plex Mono, Consolas"
                                    Foreground="#3a7d44"
@@ -118,7 +114,7 @@
                     <StackPanel>
                         <TextBlock Text="В ИЗПЪЛНЕНИЕ" FontSize="9" FontWeight="Bold"
                                    Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
-                        <TextBlock Text="{Binding PendingTasksThisMonth}"
+                        <TextBlock Text="{Binding PendingTasksPeriod}"
                                    FontSize="26" FontWeight="Bold"
                                    FontFamily="IBM Plex Mono, Consolas"
                                    Foreground="#b8860b"
@@ -133,11 +129,122 @@
                     <StackPanel>
                         <TextBlock Text="ДЕЙНОСТИ" FontSize="9" FontWeight="Bold"
                                    Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
-                        <TextBlock Text="{Binding ActivitiesThisMonth}"
+                        <TextBlock Text="{Binding ActivitiesPeriod}"
                                    FontSize="26" FontWeight="Bold"
                                    FontFamily="IBM Plex Mono, Consolas"
                                    Foreground="#3b6fa0"
                                    Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ===== CHARTS ROW ===== -->
+            <Grid ColumnDefinitions="*,16,*">
+
+                <!-- Tasks Chart -->
+                <Border Grid.Column="0" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="20">
+                    <StackPanel Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="ЗАДАЧИ ПО ПЕРИОД" FontSize="11" FontWeight="Bold"
+                                       Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding CompletionPercent, StringFormat='{}{0}% завършени'}"
+                                       FontSize="11" FontWeight="SemiBold"
+                                       Foreground="#3a7d44"/>
+                        </Grid>
+
+                        <!-- Completion progress bar -->
+                        <Grid Height="6">
+                            <Border Background="#e8e4de" CornerRadius="3"/>
+                            <Border Background="#3a7d44" CornerRadius="3"
+                                    HorizontalAlignment="Left"
+                                    Width="{Binding CompletionPercent, FallbackValue=0}"
+                                    MaxWidth="400"/>
+                        </Grid>
+
+                        <!-- Bar chart -->
+                        <Border Height="120" ClipToBounds="True">
+                            <ItemsControl ItemsSource="{Binding TaskChart}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="2"
+                                                    VerticalAlignment="Bottom"
+                                                    HorizontalAlignment="Left"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="vm:ChartBarViewModel">
+                                        <StackPanel VerticalAlignment="Bottom"
+                                                    Width="16"
+                                                    ToolTip.Tip="{Binding Tooltip}">
+                                            <TextBlock Text="{Binding Value}"
+                                                       FontSize="8"
+                                                       FontFamily="IBM Plex Mono, Consolas"
+                                                       Foreground="{StaticResource BrushTextMuted}"
+                                                       HorizontalAlignment="Center"
+                                                       IsVisible="{Binding Value}"/>
+                                            <Border Background="#3a7d44"
+                                                    CornerRadius="2,2,0,0"
+                                                    Height="{Binding HeightPercent}"
+                                                    MinHeight="2"
+                                                    Opacity="0.8"/>
+                                            <TextBlock Text="{Binding Label}"
+                                                       FontSize="7"
+                                                       Foreground="{StaticResource BrushTextMuted}"
+                                                       HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- Activities Chart -->
+                <Border Grid.Column="2" Background="{StaticResource BrushSurface}"
+                        BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="10" Padding="20">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="ДЕЙНОСТИ ПО ПЕРИОД" FontSize="11" FontWeight="Bold"
+                                   Foreground="{StaticResource BrushTextMuted}" LetterSpacing="0.5"/>
+
+                        <!-- Bar chart -->
+                        <Border Height="140" ClipToBounds="True">
+                            <ItemsControl ItemsSource="{Binding ActivityChart}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="2"
+                                                    VerticalAlignment="Bottom"
+                                                    HorizontalAlignment="Left"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="vm:ChartBarViewModel">
+                                        <StackPanel VerticalAlignment="Bottom"
+                                                    Width="16"
+                                                    ToolTip.Tip="{Binding Tooltip}">
+                                            <TextBlock Text="{Binding Value}"
+                                                       FontSize="8"
+                                                       FontFamily="IBM Plex Mono, Consolas"
+                                                       Foreground="{StaticResource BrushTextMuted}"
+                                                       HorizontalAlignment="Center"
+                                                       IsVisible="{Binding Value}"/>
+                                            <Border Background="#3b6fa0"
+                                                    CornerRadius="2,2,0,0"
+                                                    Height="{Binding HeightPercent}"
+                                                    MinHeight="2"
+                                                    Opacity="0.8"/>
+                                            <TextBlock Text="{Binding Label}"
+                                                       FontSize="7"
+                                                       Foreground="{StaticResource BrushTextMuted}"
+                                                       HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Border>
                     </StackPanel>
                 </Border>
             </Grid>

@@ -53,7 +53,15 @@ public partial class PlotsDetailViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void AddPlot() => OpenEditPlotRequested?.Invoke(null, _currentRequestId);
+    private void AddPlot()
+    {
+        if (_currentRequestId <= 0)
+        {
+            ServiceLocator.ShowError("Моля, първо изберете поръчка.");
+            return;
+        }
+        OpenEditPlotRequested?.Invoke(null, _currentRequestId);
+    }
 
     [RelayCommand]
     private void EditPlot(PlotCardViewModel? card)

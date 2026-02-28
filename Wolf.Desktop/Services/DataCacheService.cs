@@ -261,6 +261,16 @@ public class DataCacheService
             .ToList();
     }
 
+    public IReadOnlyList<PlotDto> GetPlotsForActivity(int activityId)
+    {
+        if (!_plotIdsByActivity.TryGetValue(activityId, out var plotIds))
+            return [];
+        return plotIds
+            .Where(id => _plots.ContainsKey(id))
+            .Select(id => _plots[id])
+            .ToList();
+    }
+
     public IReadOnlyList<PlotDto> GetAllPlots() =>
         _plots.Values.ToList();
 

@@ -95,6 +95,7 @@ public partial class MainWindowViewModel : ViewModelBase
         items.Add(new NavItemViewModel { Label = "Клиенти",   Icon = "👥", TabKey = "clients",   Badge = "89" });
         items.Add(new NavItemViewModel { Label = "Служители", Icon = "👷", TabKey = "employees" });
         items.Add(new NavItemViewModel { Label = "Фактури",   Icon = "💰", TabKey = "invoices" });
+        items.Add(new NavItemViewModel { Label = "Справки",   Icon = "📈", TabKey = "inqueries" });
 
         foreach (var item in items)
             item.NavigateRequested += OnNavItemNavigate;
@@ -175,6 +176,13 @@ public partial class MainWindowViewModel : ViewModelBase
                 Title = "Фактури", Icon = "💰",
                 CanClose = true,
                 Content = CreateInvoicesViewModel()
+            },
+            "inqueries" => new WolfDocument
+            {
+                Key = "inqueries", Id = "inqueries",
+                Title = "Справки", Icon = "📈",
+                CanClose = true,
+                Content = new InqueriesViewModel()
             },
             _ => null
         };

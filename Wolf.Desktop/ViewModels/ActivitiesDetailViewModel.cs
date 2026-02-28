@@ -84,7 +84,15 @@ public partial class ActivitiesDetailViewModel : ViewModelBase
     private void DeselectTask() => SelectedTask = null;
 
     [RelayCommand]
-    private void AddActivity() => OpenEditActivityRequested?.Invoke(null, _currentRequestId);
+    private void AddActivity()
+    {
+        if (_currentRequestId <= 0)
+        {
+            ServiceLocator.ShowError("Моля, първо изберете поръчка.");
+            return;
+        }
+        OpenEditActivityRequested?.Invoke(null, _currentRequestId);
+    }
 
     [RelayCommand]
     private void EditActivity()
@@ -107,8 +115,12 @@ public partial class ActivitiesDetailViewModel : ViewModelBase
     [RelayCommand]
     private void AddTask()
     {
-        if (SelectedActivity is not null)
-            OpenEditTaskRequested?.Invoke(null, SelectedActivity.Activityid);
+        if (SelectedActivity is null)
+        {
+            ServiceLocator.ShowError("Моля, първо изберете дейност.");
+            return;
+        }
+        OpenEditTaskRequested?.Invoke(null, SelectedActivity.Activityid);
     }
 
     [RelayCommand]

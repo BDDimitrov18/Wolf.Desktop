@@ -110,3 +110,7 @@
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/obj/Debug/net8.0/Wolf.Desktop.pdb
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/obj/Debug/net8.0/Wolf.Desktop.genruntimeconfig.cache
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/obj/Debug/net8.0/ref/Wolf.Desktop.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/obj/Debug/net8.0/Wolf.Desktop.sourcelink.json
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/bin/Debug/net8.0/DocumentFormat.OpenXml.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/bin/Debug/net8.0/DocumentFormat.OpenXml.Framework.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/bin/Debug/net8.0/System.IO.Packaging.dll

@@ -9,3 +9,4 @@
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/refint/Wolf.Dtos.dll
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/Wolf.Dtos.pdb
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/ref/Wolf.Dtos.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Dtos/obj/Debug/net8.0/Wolf.Dtos.sourcelink.json

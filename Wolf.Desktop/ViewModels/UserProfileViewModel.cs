@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Wolf.Desktop.Services;
 using Wolf.Dtos;
 
@@ -14,21 +15,27 @@ public partial class UserProfileViewModel : ViewModelBase
     [ObservableProperty] private string _email = "";
     [ObservableProperty] private string _phone = "";
 
-    // ── Monthly stats ────────────────────────────────────────────
-    [ObservableProperty] private int _tasksThisMonth;
-    [ObservableProperty] private int _completedTasksThisMonth;
-    [ObservableProperty] private int _pendingTasksThisMonth;
-    [ObservableProperty] private int _activitiesThisMonth;
+    // ── Period ─────────────────────────────────────────────────
+    [ObservableProperty] private string _periodLabel = "";
+    [ObservableProperty] private string _selectedPeriodKey = "this-month";
+    private DateTime _periodStart;
+    private DateTime _periodEnd;
+
+    // ── Period stats ──────────────────────────────────────────────
+    [ObservableProperty] private int _tasksPeriod;
+    [ObservableProperty] private int _completedTasksPeriod;
+    [ObservableProperty] private int _pendingTasksPeriod;
+    [ObservableProperty] private int _activitiesPeriod;
 
     // ── All-time stats ───────────────────────────────────────────
     [ObservableProperty] private int _totalTasks;
     [ObservableProperty] private int _totalActivities;
     [ObservableProperty] private int _totalCompletedTasks;
 
-    // ── Salary ───────────────────────────────────────────────────
-    [ObservableProperty] private double _projectedSalary;
-    [ObservableProperty] private double _totalEarnedAllTime;
-    [ObservableProperty] private string _currentMonth = "";
+    // ── Charts ───────────────────────────────────────────────────
+    [ObservableProperty] private ObservableCollection<ChartBarViewModel> _taskChart = [];
+    [ObservableProperty] private ObservableCollection<ChartBarViewModel> _activityChart = [];
+    [ObservableProperty] private double _completionPercent;
 
     // ── Recent completed tasks ───────────────────────────────────
     [ObservableProperty] private ObservableCollection<TaskDto> _recentTasks = [];
@@ -37,11 +44,52 @@ public partial class UserProfileViewModel : ViewModelBase
     {
         ServiceLocator.Cache.TasksChanged += Refresh;
         ServiceLocator.Cache.ActivitiesChanged += Refresh;
+        SetPeriod("this-month");
+    }
+
+    [RelayCommand]
+    private void SetPeriod(string key)
+    {
+        SelectedPeriodKey = key;
+        RecalcPeriodBounds();
         Refresh();
+    }
+
+    private void RecalcPeriodBounds()
+    {
+        var now = DateTime.Now;
+        var today = now.Date;
+
+        switch (SelectedPeriodKey)
+        {
+            case "this-month":
+                _periodStart = new DateTime(now.Year, now.Month, 1);
+                _periodEnd = today.AddDays(1); // always up to today
+                PeriodLabel = now.ToString("MMMM yyyy");
+                break;
+            case "last-month":
+                _periodStart = new DateTime(now.Year, now.Month, 1).AddMonths(-1);
+                _periodEnd = new DateTime(now.Year, now.Month, 1);
+                PeriodLabel = _periodStart.ToString("MMMM yyyy");
+                break;
+            case "last-3-months":
+                _periodStart = new DateTime(now.Year, now.Month, 1).AddMonths(-2);
+                _periodEnd = today.AddDays(1);
+                PeriodLabel = $"{_periodStart:MMM yyyy} – {now:MMM yyyy}";
+                break;
+            case "all-time":
+                _periodStart = DateTime.MinValue;
+                _periodEnd = DateTime.MaxValue;
+                PeriodLabel = "Цялото време";
+                break;
+        }
     }
 
     private void Refresh()
     {
+        // Recalculate period boundaries so "this-month" always ends at today
+        RecalcPeriodBounds();
+
         var empId = ServiceLocator.Auth.CurrentEmployeeId;
         if (empId is null) return;
 
@@ -72,41 +120,204 @@ public partial class UserProfileViewModel : ViewModelBase
         TotalActivities = allActivities.Count;
         TotalCompletedTasks = allTasks.Count(t => IsDone(t.Status));
 
-        // Current month filter
-        var now = DateTime.Now;
-        var monthStart = new DateTime(now.Year, now.Month, 1);
-        var monthEnd = monthStart.AddMonths(1);
-        CurrentMonth = now.ToString("MMMM yyyy");
-
-        var tasksThisMonth = allTasks
-            .Where(t => t.Startdate >= monthStart && t.Startdate < monthEnd)
+        // Period filter
+        var periodTasks = allTasks
+            .Where(t => t.Startdate >= _periodStart && t.Startdate < _periodEnd)
             .ToList();
 
-        TasksThisMonth = tasksThisMonth.Count;
-        CompletedTasksThisMonth = tasksThisMonth.Count(t => IsDone(t.Status));
-        PendingTasksThisMonth = tasksThisMonth.Count(t => IsPending(t.Status));
-
-        var activitiesThisMonth = allActivities
-            .Where(a => a.Startdate >= monthStart && a.Startdate < monthEnd)
+        var periodActivities = allActivities
+            .Where(a => a.Startdate >= _periodStart && a.Startdate < _periodEnd)
             .ToList();
-        ActivitiesThisMonth = activitiesThisMonth.Count;
 
-        // Projected salary = sum of Executantpayment for done tasks this month
-        ProjectedSalary = tasksThisMonth
-            .Where(t => IsDone(t.Status))
-            .Sum(t => t.Executantpayment);
+        TasksPeriod = periodTasks.Count;
+        CompletedTasksPeriod = periodTasks.Count(t => IsDone(t.Status));
+        PendingTasksPeriod = periodTasks.Count(t => IsPending(t.Status));
+        ActivitiesPeriod = periodActivities.Count;
 
-        // Total earned all time
-        TotalEarnedAllTime = allTasks
-            .Where(t => IsDone(t.Status))
-            .Sum(t => t.Executantpayment);
+        // Completion percent
+        CompletionPercent = TasksPeriod > 0
+            ? Math.Round((double)CompletedTasksPeriod / TasksPeriod * 100, 1)
+            : 0;
 
-        // Recent tasks (last 10 completed)
+        // Build charts
+        BuildCharts(periodTasks, periodActivities);
+
+        // Recent tasks (last 10 completed in period)
         RecentTasks = new ObservableCollection<TaskDto>(
-            allTasks
+            periodTasks
                 .Where(t => IsDone(t.Status))
                 .OrderByDescending(t => t.Finishdate)
                 .Take(10));
+    }
+
+    private void BuildCharts(List<TaskDto> tasks, List<ActivityDto> activities)
+    {
+        // Determine grouping: daily for <=31 days, weekly for longer
+        var totalDays = (_periodEnd - _periodStart).TotalDays;
+        var useWeeks = totalDays > 45 || SelectedPeriodKey == "all-time";
+
+        if (SelectedPeriodKey == "all-time")
+        {
+            // Group by month
+            BuildMonthlyCharts(tasks, activities);
+            return;
+        }
+
+        if (useWeeks)
+        {
+            BuildWeeklyCharts(tasks, activities);
+            return;
+        }
+
+        // Daily grouping
+        var dayCount = (int)Math.Ceiling(totalDays);
+        var tasksByDay = tasks.GroupBy(t => (t.Startdate.Date - _periodStart.Date).Days)
+            .ToDictionary(g => g.Key, g => g.Count());
+        var actsByDay = activities.GroupBy(a => (a.Startdate.Date - _periodStart.Date).Days)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        var maxTask = tasksByDay.Values.DefaultIfEmpty(0).Max();
+        var maxAct = actsByDay.Values.DefaultIfEmpty(0).Max();
+
+        var taskBars = new List<ChartBarViewModel>();
+        var actBars = new List<ChartBarViewModel>();
+
+        for (var i = 0; i < dayCount; i++)
+        {
+            var date = _periodStart.AddDays(i);
+            tasksByDay.TryGetValue(i, out var tc);
+            actsByDay.TryGetValue(i, out var ac);
+
+            taskBars.Add(new ChartBarViewModel
+            {
+                Label = date.ToString("dd"),
+                Value = tc,
+                HeightPercent = maxTask > 0 ? (double)tc / maxTask * 100 : 0,
+                Tooltip = $"{date:dd.MM} — {tc} задачи"
+            });
+
+            actBars.Add(new ChartBarViewModel
+            {
+                Label = date.ToString("dd"),
+                Value = ac,
+                HeightPercent = maxAct > 0 ? (double)ac / maxAct * 100 : 0,
+                Tooltip = $"{date:dd.MM} — {ac} дейности"
+            });
+        }
+
+        TaskChart = new ObservableCollection<ChartBarViewModel>(taskBars);
+        ActivityChart = new ObservableCollection<ChartBarViewModel>(actBars);
+    }
+
+    private void BuildWeeklyCharts(List<TaskDto> tasks, List<ActivityDto> activities)
+    {
+        var weeks = new List<(DateTime Start, DateTime End)>();
+        var cur = _periodStart;
+        while (cur < _periodEnd)
+        {
+            var end = cur.AddDays(7) > _periodEnd ? _periodEnd : cur.AddDays(7);
+            weeks.Add((cur, end));
+            cur = end;
+        }
+
+        var maxTask = 0;
+        var maxAct = 0;
+        var taskCounts = new int[weeks.Count];
+        var actCounts = new int[weeks.Count];
+
+        for (var i = 0; i < weeks.Count; i++)
+        {
+            taskCounts[i] = tasks.Count(t => t.Startdate >= weeks[i].Start && t.Startdate < weeks[i].End);
+            actCounts[i] = activities.Count(a => a.Startdate >= weeks[i].Start && a.Startdate < weeks[i].End);
+            if (taskCounts[i] > maxTask) maxTask = taskCounts[i];
+            if (actCounts[i] > maxAct) maxAct = actCounts[i];
+        }
+
+        var taskBars = new List<ChartBarViewModel>();
+        var actBars = new List<ChartBarViewModel>();
+
+        for (var i = 0; i < weeks.Count; i++)
+        {
+            var label = $"{weeks[i].Start:dd.MM}";
+            taskBars.Add(new ChartBarViewModel
+            {
+                Label = label, Value = taskCounts[i],
+                HeightPercent = maxTask > 0 ? (double)taskCounts[i] / maxTask * 100 : 0,
+                Tooltip = $"{weeks[i].Start:dd.MM}–{weeks[i].End.AddDays(-1):dd.MM} — {taskCounts[i]} задачи"
+            });
+            actBars.Add(new ChartBarViewModel
+            {
+                Label = label, Value = actCounts[i],
+                HeightPercent = maxAct > 0 ? (double)actCounts[i] / maxAct * 100 : 0,
+                Tooltip = $"{weeks[i].Start:dd.MM}–{weeks[i].End.AddDays(-1):dd.MM} — {actCounts[i]} дейности"
+            });
+        }
+
+        TaskChart = new ObservableCollection<ChartBarViewModel>(taskBars);
+        ActivityChart = new ObservableCollection<ChartBarViewModel>(actBars);
+    }
+
+    private void BuildMonthlyCharts(List<TaskDto> tasks, List<ActivityDto> activities)
+    {
+        if (tasks.Count == 0 && activities.Count == 0)
+        {
+            TaskChart = [];
+            ActivityChart = [];
+            return;
+        }
+
+        var allDates = tasks.Select(t => t.Startdate)
+            .Concat(activities.Select(a => a.Startdate))
+            .ToList();
+        var minDate = allDates.Min();
+        var maxDate = allDates.Max();
+
+        var months = new List<(int Year, int Month)>();
+        var cur = new DateTime(minDate.Year, minDate.Month, 1);
+        var end = new DateTime(maxDate.Year, maxDate.Month, 1).AddMonths(1);
+        while (cur < end)
+        {
+            months.Add((cur.Year, cur.Month));
+            cur = cur.AddMonths(1);
+        }
+
+        // Limit to last 12 months for readability
+        if (months.Count > 12)
+            months = months.Skip(months.Count - 12).ToList();
+
+        var tasksByMonth = tasks.GroupBy(t => (t.Startdate.Year, t.Startdate.Month))
+            .ToDictionary(g => g.Key, g => g.Count());
+        var actsByMonth = activities.GroupBy(a => (a.Startdate.Year, a.Startdate.Month))
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        var maxTask = tasksByMonth.Values.DefaultIfEmpty(0).Max();
+        var maxAct = actsByMonth.Values.DefaultIfEmpty(0).Max();
+
+        var taskBars = new List<ChartBarViewModel>();
+        var actBars = new List<ChartBarViewModel>();
+
+        foreach (var (year, month) in months)
+        {
+            tasksByMonth.TryGetValue((year, month), out var tc);
+            actsByMonth.TryGetValue((year, month), out var ac);
+            var label = new DateTime(year, month, 1).ToString("MMM");
+
+            taskBars.Add(new ChartBarViewModel
+            {
+                Label = label, Value = tc,
+                HeightPercent = maxTask > 0 ? (double)tc / maxTask * 100 : 0,
+                Tooltip = $"{new DateTime(year, month, 1):MMM yyyy} — {tc} задачи"
+            });
+            actBars.Add(new ChartBarViewModel
+            {
+                Label = label, Value = ac,
+                HeightPercent = maxAct > 0 ? (double)ac / maxAct * 100 : 0,
+                Tooltip = $"{new DateTime(year, month, 1):MMM yyyy} — {ac} дейности"
+            });
+        }
+
+        TaskChart = new ObservableCollection<ChartBarViewModel>(taskBars);
+        ActivityChart = new ObservableCollection<ChartBarViewModel>(actBars);
     }
 
     private static bool IsDone(string? status) =>
@@ -115,4 +326,12 @@ public partial class UserProfileViewModel : ViewModelBase
     private static bool IsPending(string? status) =>
         string.Equals(status, "Pending", StringComparison.OrdinalIgnoreCase) ||
         string.Equals(status, "Active", StringComparison.OrdinalIgnoreCase);
+}
+
+public class ChartBarViewModel
+{
+    public string Label { get; set; } = "";
+    public int Value { get; set; }
+    public double HeightPercent { get; set; }
+    public string Tooltip { get; set; } = "";
 }

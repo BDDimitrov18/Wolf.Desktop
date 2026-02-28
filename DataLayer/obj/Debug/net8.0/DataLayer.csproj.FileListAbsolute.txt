@@ -12,3 +12,4 @@
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.pdb
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.genruntimeconfig.cache
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/ref/DataLayer.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/DataLayer/obj/Debug/net8.0/DataLayer.sourcelink.json

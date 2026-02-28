@@ -39,7 +39,15 @@ public partial class InvoicesDetailViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void AddInvoice() => OpenEditInvoiceRequested?.Invoke(null, _currentRequestId);
+    private void AddInvoice()
+    {
+        if (_currentRequestId <= 0)
+        {
+            ServiceLocator.ShowError("Моля, първо изберете поръчка.");
+            return;
+        }
+        OpenEditInvoiceRequested?.Invoke(null, _currentRequestId);
+    }
 
     [RelayCommand]
     private void EditInvoice(InvoiceDto? dto)

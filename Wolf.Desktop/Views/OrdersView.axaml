@@ -112,6 +112,11 @@
                              Background="Transparent"
                              BorderThickness="0"
                              Padding="0">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
                         <ListBox.Styles>
                             <Style Selector="ListBoxItem">
                                 <Setter Property="Padding" Value="0"/>
@@ -361,6 +366,11 @@
                                          ItemsSource="{Binding ActivitiesDetail.Activities}"
                                          SelectedItem="{Binding ActivitiesDetail.SelectedActivity}"
                                          Background="Transparent" BorderThickness="0" Padding="0">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
                                     <ListBox.Styles>
                                         <Style Selector="ListBoxItem">
                                             <Setter Property="Padding" Value="0"/>
@@ -497,6 +507,11 @@
                                          ItemsSource="{Binding ActivitiesDetail.Tasks}"
                                          SelectedItem="{Binding ActivitiesDetail.SelectedTask}"
                                          Background="Transparent" BorderThickness="0" Padding="0">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
                                     <ListBox.Styles>
                                         <Style Selector="ListBoxItem">
                                             <Setter Property="Padding" Value="0"/>

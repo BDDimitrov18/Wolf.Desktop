@@ -49,5 +49,13 @@ public partial class ClientsDetailViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void LinkClient() => OpenLinkClientRequested?.Invoke(_currentRequestId);
+    private void LinkClient()
+    {
+        if (_currentRequestId <= 0)
+        {
+            ServiceLocator.ShowError("Моля, първо изберете поръчка.");
+            return;
+        }
+        OpenLinkClientRequested?.Invoke(_currentRequestId);
+    }
 }

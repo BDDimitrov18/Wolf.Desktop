@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Wolf.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea4d391db4e69a608e6716df2d51595a634e2afe")]
 [assembly: System.Reflection.AssemblyProductAttribute("Wolf.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Wolf.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -66,6 +66,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/EmployeesView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/InqueriesView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Desktop/Views/InvoicesView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 

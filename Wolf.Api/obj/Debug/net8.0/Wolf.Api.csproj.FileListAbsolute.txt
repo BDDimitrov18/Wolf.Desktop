@@ -116,3 +116,4 @@
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Api/obj/Debug/net8.0/Wolf.Api.pdb
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Api/obj/Debug/net8.0/Wolf.Api.genruntimeconfig.cache
 /Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Api/obj/Debug/net8.0/ref/Wolf.Api.dll
+/Users/bozhidardimitrov/RiderProjects/Wolf.Desktop/Wolf.Api/obj/Debug/net8.0/Wolf.Api.sourcelink.json

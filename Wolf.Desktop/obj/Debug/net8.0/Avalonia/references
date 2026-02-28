@@ -32,6 +32,8 @@
 /Users/bozhidardimitrov/.nuget/packages/dock.model/11.3.11.13/lib/net8.0/Dock.Model.dll
 /Users/bozhidardimitrov/.nuget/packages/dock.model.mvvm/11.3.11.13/lib/net8.0/Dock.Model.Mvvm.dll
 /Users/bozhidardimitrov/.nuget/packages/dock.settings/11.3.11.13/lib/net8.0/Dock.Settings.dll
+/Users/bozhidardimitrov/.nuget/packages/documentformat.openxml/3.4.1/lib/net8.0/DocumentFormat.OpenXml.dll
+/Users/bozhidardimitrov/.nuget/packages/documentformat.openxml.framework/3.4.1/lib/net8.0/DocumentFormat.OpenXml.Framework.dll
 /Users/bozhidardimitrov/.nuget/packages/harfbuzzsharp/8.3.1.1/lib/net8.0/HarfBuzzSharp.dll
 /Users/bozhidardimitrov/.nuget/packages/microcom.runtime/0.11.0/lib/net5.0/MicroCom.Runtime.dll
 /Users/bozhidardimitrov/.nuget/packages/microsoft.aspnetcore.connections.abstractions/8.0.0/lib/net8.0/Microsoft.AspNetCore.Connections.Abstractions.dll
@@ -118,6 +120,7 @@
 /Users/bozhidardimitrov/.dotnet/packs/Microsoft.NETCore.App.Ref/8.0.22/ref/net8.0/System.IO.FileSystem.Watcher.dll
 /Users/bozhidardimitrov/.dotnet/packs/Microsoft.NETCore.App.Ref/8.0.22/ref/net8.0/System.IO.IsolatedStorage.dll
 /Users/bozhidardimitrov/.dotnet/packs/Microsoft.NETCore.App.Ref/8.0.22/ref/net8.0/System.IO.MemoryMappedFiles.dll
+/Users/bozhidardimitrov/.nuget/packages/system.io.packaging/8.0.1/lib/net8.0/System.IO.Packaging.dll
 /Users/bozhidardimitrov/.nuget/packages/system.io.pipelines/8.0.0/lib/net8.0/System.IO.Pipelines.dll
 /Users/bozhidardimitrov/.dotnet/packs/Microsoft.NETCore.App.Ref/8.0.22/ref/net8.0/System.IO.Pipes.AccessControl.dll
 /Users/bozhidardimitrov/.dotnet/packs/Microsoft.NETCore.App.Ref/8.0.22/ref/net8.0/System.IO.Pipes.dll
