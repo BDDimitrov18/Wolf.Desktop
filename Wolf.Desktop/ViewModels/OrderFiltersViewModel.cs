@@ -44,6 +44,7 @@ public partial class OrderFiltersViewModel : ViewModelBase
 
     // ── Dropdown options ────────────────────────────────────────
     public static readonly string[] ArchiveStatusOptions = ["Всички", "Active", "Archived"];
+    public bool IsFullMode => ServiceLocator.IsFullMode;
     public static readonly string[] TaskStatusOptions = ["Всички", "Зададена", "завършена", "оферта"];
     public static readonly string[] PaymentStatusOptions = ["Всички", "Платен", "Аванс", "Не платен"];
 

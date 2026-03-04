@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
+using Wolf.Desktop.Services;
 using Wolf.Desktop.ViewModels;
 
 namespace Wolf.Desktop.Views;
@@ -16,7 +18,44 @@ public partial class LoginWindow : Window
         if (dragRegion is not null)
             dragRegion.PointerPressed += OnDragRegionPressed;
 
+        // Apply current mode colors
+        ApplyModeColors();
+
+        // Shift+DoubleClick on logo toggles Full mode
+        var logoBorder = this.FindControl<Border>("LogoBorder");
+        if (logoBorder is not null)
+        {
+            logoBorder.PointerPressed += (s, e) =>
+            {
+                if (e.ClickCount == 2 && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+                {
+                    ServiceLocator.IsFullMode = !ServiceLocator.IsFullMode;
+                    ApplyModeColors();
+                }
+            };
+        }
+
         DataContextChanged += OnDataContextChanged;
+    }
+
+    private void ApplyModeColors()
+    {
+        var isFullMode = ServiceLocator.IsFullMode;
+        var accent = Color.Parse(isFullMode ? "#3b6fa0" : "#c45d2c");
+        var glowColor = Color.Parse(isFullMode ? "#443b6fa0" : "#44c45d2c");
+        var brush = new SolidColorBrush(accent);
+
+        var logoBorder = this.FindControl<Border>("LogoBorder");
+        if (logoBorder is not null) logoBorder.Background = new SolidColorBrush(accent);
+
+        var loginButton = this.FindControl<Button>("LoginButton");
+        if (loginButton is not null) loginButton.Background = new SolidColorBrush(accent);
+
+        var splashLogo = this.FindControl<Border>("SplashLogo");
+        if (splashLogo is not null) splashLogo.Background = new SolidColorBrush(accent);
+
+        var glowRing = this.FindControl<Border>("GlowRing");
+        if (glowRing is not null) glowRing.Background = new SolidColorBrush(glowColor);
     }
 
     private void OnDataContextChanged(object? sender, EventArgs e)

@@ -40,7 +40,11 @@ public partial class DashboardViewModel : ViewModelBase
 
     [ObservableProperty] private ObservableCollection<RequestDto> _statusFilteredOrders = [];
 
-    public static readonly string[] StatusFilters = ["Всички", "Active", "Archived"];
+    public string[] StatusFilters => ServiceLocator.IsFullMode
+        ? ["Всички", "Active", "Archived"]
+        : ["Всички"];
+
+    public bool IsFullMode => ServiceLocator.IsFullMode;
 
     private DispatcherTimer? _debounceTimer;
 
@@ -70,7 +74,10 @@ public partial class DashboardViewModel : ViewModelBase
 
     private void Refresh()
     {
-        var requests = ServiceLocator.Cache.GetAllRequests();
+        var allRequests = ServiceLocator.Cache.GetAllRequests();
+        var requests = ServiceLocator.IsFullMode
+            ? allRequests
+            : allRequests.Where(r => eq(r.Status, "Active")).ToList();
         var clients = ServiceLocator.Cache.GetAllClients();
 
         // Summary
@@ -145,7 +152,10 @@ public partial class DashboardViewModel : ViewModelBase
 
     private void ApplyStatusFilter()
     {
-        var requests = ServiceLocator.Cache.GetAllRequests();
+        var allRequests = ServiceLocator.Cache.GetAllRequests();
+        var requests = ServiceLocator.IsFullMode
+            ? allRequests
+            : allRequests.Where(r => eq(r.Status, "Active")).ToList();
         var filtered = SelectedStatus == "Всички"
             ? requests
             : requests.Where(r => eq(r.Status, SelectedStatus)).ToList();

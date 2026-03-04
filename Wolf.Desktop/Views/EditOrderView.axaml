@@ -42,7 +42,8 @@
                                  Watermark="Въведете име на поръчка..."/>
                     </StackPanel>
 
-                    <StackPanel Spacing="6">
+                    <StackPanel Spacing="6"
+                                IsVisible="{Binding IsFullMode}">
                         <TextBlock Text="Статус" FontSize="12" FontWeight="Medium"/>
                         <ComboBox ItemsSource="{x:Static vm:EditOrderViewModel.StatusOptions}"
                                   SelectedItem="{Binding Status}"

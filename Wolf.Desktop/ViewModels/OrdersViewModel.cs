@@ -22,7 +22,11 @@ public partial class OrdersViewModel : ViewModelBase
     public PlotsDetailViewModel PlotsDetail { get; } = new();
     public InvoicesDetailViewModel InvoicesDetail { get; } = new();
 
-    public static readonly string[] FilterOptions = ["Всички", "Active", "Archived"];
+    public string[] FilterOptions => ServiceLocator.IsFullMode
+        ? ["Всички", "Active", "Archived"]
+        : [];
+
+    public bool IsFullMode => ServiceLocator.IsFullMode;
 
     public event Action<OrderRowViewModel?>? OpenEditOrderRequested;
     public event Action? OpenFiltersRequested;
@@ -120,6 +124,10 @@ public partial class OrdersViewModel : ViewModelBase
 
         var filtered = Orders.Where(o =>
         {
+            // Active mode: hide non-active orders
+            if (!ServiceLocator.IsFullMode && !string.Equals(o.Status, "Active", StringComparison.OrdinalIgnoreCase))
+                return false;
+
             // Quick filter bar
             if (f != "Всички" && !string.Equals(o.Status, f, StringComparison.OrdinalIgnoreCase))
                 return false;

@@ -21,6 +21,7 @@ public partial class EditOrderViewModel : ViewModelBase
 
     public bool IsNew => RequestId is null;
     public string FormTitle => IsNew ? "Нова поръчка" : $"Редакция на поръчка #{RequestId}";
+    public bool IsFullMode => ServiceLocator.IsFullMode;
 
     public event Action? SaveCompleted;
     public event Action? CancelRequested;

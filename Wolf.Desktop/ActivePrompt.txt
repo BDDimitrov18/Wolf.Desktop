@@ -1,0 +1,7 @@
+I need to have 2 modes in this application. One will be for only displaying the active orders. The second one will be for all the orders.
+What basically needs to happen is in the active mode there needs to be no indication at all that the archive orders exist. 
+That means removing the archive/active filter from the filters in the orders tab.
+This also means removing the option for setting archive status in the create and edit order.
+And it also means not displaying the archive status in the orders tab in the active application.
+
+There needs to be a way of dinamically switching between the 2 apps. For example holidng shift and double clicking on the logo in the login screen.

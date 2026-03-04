@@ -30,6 +30,9 @@ public static class ServiceLocator
     /// <summary>Maps EmployeeId → display name, populated by DataCacheService.</summary>
     public static Dictionary<int, string> EmployeesCache { get; } = new();
 
+    /// <summary>When true, the app shows archived orders and archive-related UI.</summary>
+    public static bool IsFullMode { get; set; }
+
     public static void Initialize(string baseUrl = "http://localhost:5284/")
     {
         _apiClient = new ApiClient(baseUrl);

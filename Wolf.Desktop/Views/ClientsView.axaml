@@ -44,7 +44,7 @@
         </Border>
 
         <!-- ===== CLIENT TABLE ===== -->
-        <Grid Grid.Row="1" RowDefinitions="Auto,*">
+        <Grid Grid.Row="1" RowDefinitions="Auto,*,Auto">
 
             <!-- Header -->
             <Grid Grid.Row="0" ColumnDefinitions="44,*,120,140,160,120,65"
@@ -76,193 +76,183 @@
                            VerticalAlignment="Center" Margin="4,0"/>
             </Grid>
 
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <StackPanel>
-                    <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
-                    <ListBox ItemsSource="{Binding FilteredClients}"
-                             SelectedItem="{Binding SelectedClient}"
-                             Background="Transparent"
-                             BorderThickness="0"
-                             Padding="0">
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel/>
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                        <ListBox.Styles>
-                            <Style Selector="ListBoxItem">
-                                <Setter Property="Padding" Value="0"/>
-                                <Setter Property="Margin" Value="0"/>
-                            </Style>
-                        </ListBox.Styles>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate DataType="dto:ClientDto">
-                                <StackPanel>
-                                    <!-- Main row -->
-                                    <Grid ColumnDefinitions="44,*,120,140,160,120,65"
-                                          MinHeight="36"
-                                          Background="Transparent">
-                                        <Grid.Styles>
-                                            <Style Selector="Grid:pointerover">
-                                                <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}"/>
-                                            </Style>
-                                        </Grid.Styles>
-                                        <TextBlock Grid.Column="0"
-                                                   Text="{Binding Clientid}"
-                                                   FontFamily="IBM Plex Mono, Consolas"
-                                                   Foreground="{StaticResource BrushTextMuted}"
-                                                   FontSize="12"
-                                                   VerticalAlignment="Center"
-                                                   Margin="12,0,0,0"/>
-                                        <TextBlock Grid.Column="1"
-                                                   FontWeight="SemiBold"
-                                                   FontSize="12.5"
-                                                   VerticalAlignment="Center"
-                                                   Margin="4,0"
-                                                   TextTrimming="CharacterEllipsis">
-                                            <Run Text="{Binding Firstname}"/>
-                                            <Run Text=" "/>
-                                            <Run Text="{Binding Lastname}"/>
-                                        </TextBlock>
-                                        <TextBlock Grid.Column="2"
-                                                   Text="{Binding Phone}"
-                                                   Foreground="{StaticResource BrushTextSecondary}"
-                                                   FontSize="12"
-                                                   VerticalAlignment="Center"
-                                                   Margin="4,0"
-                                                   TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Grid.Column="3"
-                                                   Text="{Binding Email}"
-                                                   Foreground="#3b6fa0"
-                                                   FontSize="12"
-                                                   VerticalAlignment="Center"
-                                                   Margin="4,0"
-                                                   TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Grid.Column="4"
-                                                   Text="{Binding Address}"
-                                                   Foreground="{StaticResource BrushTextSecondary}"
-                                                   FontSize="12"
-                                                   VerticalAlignment="Center"
-                                                   Margin="4,0"
-                                                   TextTrimming="CharacterEllipsis"/>
-                                        <Border Grid.Column="5"
-                                                CornerRadius="12"
-                                                Padding="8,2"
-                                                Margin="4,0"
-                                                VerticalAlignment="Center"
-                                                HorizontalAlignment="Left"
-                                                Background="#edf5ee"
-                                                IsVisible="{Binding Clientlegaltype, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                                            <TextBlock Text="{Binding Clientlegaltype}"
-                                                       FontSize="10" FontWeight="SemiBold"
-                                                       Foreground="#3a7d44"/>
-                                        </Border>
-                                        <StackPanel Grid.Column="6"
-                                                    Orientation="Horizontal"
-                                                    Spacing="2"
-                                                    VerticalAlignment="Center"
-                                                    HorizontalAlignment="Center">
-                                            <Button Classes="icon sm"
-                                                    Command="{Binding $parent[UserControl].DataContext.EditClientCommand}"
-                                                    CommandParameter="{Binding}"
-                                                    ToolTip.Tip="Редактиране">
-                                                <TextBlock Text="&#x270F;&#xFE0F;" FontSize="13"/>
-                                            </Button>
-                                            <Button Classes="icon sm"
-                                                    Command="{Binding $parent[UserControl].DataContext.DeleteClientCommand}"
-                                                    CommandParameter="{Binding}"
-                                                    ToolTip.Tip="Изтриване">
-                                                <TextBlock Text="&#x1F5D1;&#xFE0F;" FontSize="13"/>
-                                            </Button>
-                                        </StackPanel>
-                                    </Grid>
-
-                                    <!-- Expand content when selected -->
-                                    <Border IsVisible="{Binding $parent[ListBoxItem].IsSelected}"
-                                            Background="{StaticResource BrushSurfaceAlt}"
-                                            BorderThickness="3,0,0,0"
-                                            BorderBrush="{StaticResource BrushAccent}"
-                                            Padding="20,12,20,16">
-                                        <StackPanel Spacing="14">
-                                            <Button Classes="icon sm"
-                                                    HorizontalAlignment="Right"
-                                                    Margin="0,-4,0,0"
-                                                    ToolTip.Tip="Свиване"
-                                                    Command="{Binding $parent[UserControl].DataContext.DeselectClientCommand}">
-                                                <TextBlock Text="&#x25B2;" FontSize="11" Foreground="{StaticResource BrushTextMuted}"/>
-                                            </Button>
-
-                                            <WrapPanel Orientation="Horizontal">
-                                                <StackPanel Margin="0,0,24,8" Width="100">
-                                                    <TextBlock Text="ИД КЛИЕНТ" FontSize="10" FontWeight="Bold"
-                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
-                                                    <TextBlock Text="{Binding Clientid, StringFormat='#{0}'}"
-                                                               FontFamily="IBM Plex Mono, Consolas" FontSize="12.5"/>
-                                                </StackPanel>
-                                                <StackPanel Margin="0,0,24,8" Width="140">
-                                                    <TextBlock Text="ИМЕ" FontSize="10" FontWeight="Bold"
-                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
-                                                    <TextBlock Text="{Binding Firstname}" FontSize="12.5"/>
-                                                </StackPanel>
-                                                <StackPanel Margin="0,0,24,8" Width="140"
-                                                            IsVisible="{Binding Middlename, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                                                    <TextBlock Text="ПРЕЗИМЕ" FontSize="10" FontWeight="Bold"
-                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
-                                                    <TextBlock Text="{Binding Middlename}" FontSize="12.5"/>
-                                                </StackPanel>
-                                                <StackPanel Margin="0,0,24,8" Width="140">
-                                                    <TextBlock Text="ФАМИЛИЯ" FontSize="10" FontWeight="Bold"
-                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
-                                                    <TextBlock Text="{Binding Lastname}" FontSize="12.5"/>
-                                                </StackPanel>
-                                                <StackPanel Margin="0,0,24,8" Width="140"
-                                                            IsVisible="{Binding Phone, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                                                    <TextBlock Text="ТЕЛЕФОН" FontSize="10" FontWeight="Bold"
-                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
-                                                    <TextBlock Text="{Binding Phone}" FontSize="12.5"/>
-                                                </StackPanel>
-                                                <StackPanel Margin="0,0,24,8" Width="200"
-                                                            IsVisible="{Binding Email, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                                                    <TextBlock Text="ИМЕЙЛ" FontSize="10" FontWeight="Bold"
-                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
-                                                    <TextBlock Text="{Binding Email}" FontSize="12.5" Foreground="#3b6fa0"/>
-                                                </StackPanel>
-                                                <StackPanel Margin="0,0,24,8" Width="240"
-                                                            IsVisible="{Binding Address, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                                                    <TextBlock Text="АДРЕС" FontSize="10" FontWeight="Bold"
-                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
-                                                    <TextBlock Text="{Binding Address}" FontSize="12.5" TextWrapping="Wrap"/>
-                                                </StackPanel>
-                                                <StackPanel Margin="0,0,24,8" Width="120"
-                                                            IsVisible="{Binding Clientlegaltype, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                                                    <TextBlock Text="ПРАВЕН ТИП" FontSize="10" FontWeight="Bold"
-                                                               Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
-                                                    <TextBlock Text="{Binding Clientlegaltype}" FontSize="12.5"/>
-                                                </StackPanel>
-                                            </WrapPanel>
-
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <Button Classes="sm"
-                                                        Command="{Binding $parent[UserControl].DataContext.EditClientCommand}"
-                                                        CommandParameter="{Binding}">
-                                                    &#x270F;&#xFE0F; Редактиране на клиент
-                                                </Button>
-                                                <Button Classes="sm danger"
-                                                        Command="{Binding $parent[UserControl].DataContext.DeleteClientCommand}"
-                                                        CommandParameter="{Binding}">
-                                                    &#x1F5D1;&#xFE0F; Изтриване
-                                                </Button>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Border>
-
-                                    <Rectangle Height="1" Fill="{StaticResource BrushBorder}"/>
+            <ListBox Grid.Row="1"
+                     ItemsSource="{Binding FilteredClients}"
+                     SelectedItem="{Binding SelectedClient}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Padding="0">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </ListBox.Styles>
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="dto:ClientDto">
+                        <Border BorderThickness="0,0,0,1" BorderBrush="{StaticResource BrushBorder}">
+                            <Grid ColumnDefinitions="44,*,120,140,160,120,65"
+                                  MinHeight="36"
+                                  Background="Transparent">
+                                <Grid.Styles>
+                                    <Style Selector="Grid:pointerover">
+                                        <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}"/>
+                                    </Style>
+                                </Grid.Styles>
+                                <TextBlock Grid.Column="0"
+                                           Text="{Binding Clientid}"
+                                           FontFamily="IBM Plex Mono, Consolas"
+                                           Foreground="{StaticResource BrushTextMuted}"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           Margin="12,0,0,0"/>
+                                <TextBlock Grid.Column="1"
+                                           FontWeight="SemiBold"
+                                           FontSize="12.5"
+                                           VerticalAlignment="Center"
+                                           Margin="4,0"
+                                           TextTrimming="CharacterEllipsis">
+                                    <Run Text="{Binding Firstname}"/>
+                                    <Run Text=" "/>
+                                    <Run Text="{Binding Lastname}"/>
+                                </TextBlock>
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding Phone}"
+                                           Foreground="{StaticResource BrushTextSecondary}"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           Margin="4,0"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Grid.Column="3"
+                                           Text="{Binding Email}"
+                                           Foreground="#3b6fa0"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           Margin="4,0"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Grid.Column="4"
+                                           Text="{Binding Address}"
+                                           Foreground="{StaticResource BrushTextSecondary}"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           Margin="4,0"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <Border Grid.Column="5"
+                                        CornerRadius="12"
+                                        Padding="8,2"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left"
+                                        Background="#edf5ee"
+                                        IsVisible="{Binding Clientlegaltype, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                    <TextBlock Text="{Binding Clientlegaltype}"
+                                               FontSize="10" FontWeight="SemiBold"
+                                               Foreground="#3a7d44"/>
+                                </Border>
+                                <StackPanel Grid.Column="6"
+                                            Orientation="Horizontal"
+                                            Spacing="2"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center">
+                                    <Button Classes="icon sm"
+                                            Command="{Binding $parent[UserControl].DataContext.EditClientCommand}"
+                                            CommandParameter="{Binding}"
+                                            ToolTip.Tip="Редактиране">
+                                        <TextBlock Text="&#x270F;&#xFE0F;" FontSize="13"/>
+                                    </Button>
+                                    <Button Classes="icon sm"
+                                            Command="{Binding $parent[UserControl].DataContext.DeleteClientCommand}"
+                                            CommandParameter="{Binding}"
+                                            ToolTip.Tip="Изтриване">
+                                        <TextBlock Text="&#x1F5D1;&#xFE0F;" FontSize="13"/>
+                                    </Button>
                                 </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </StackPanel>
-            </ScrollViewer>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- Detail panel -->
+            <Border Grid.Row="2"
+                    IsVisible="{Binding SelectedClient, Converter={x:Static ObjectConverters.IsNotNull}}"
+                    Background="{StaticResource BrushSurfaceAlt}"
+                    BorderThickness="0,1,0,0" BorderBrush="{StaticResource BrushBorder}"
+                    Padding="20,12,20,16" MaxHeight="220">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="14">
+                        <Button Classes="icon sm"
+                                HorizontalAlignment="Right"
+                                Margin="0,-4,0,0"
+                                ToolTip.Tip="Свиване"
+                                Command="{Binding DeselectClientCommand}">
+                            <TextBlock Text="&#x25B2;" FontSize="11" Foreground="{StaticResource BrushTextMuted}"/>
+                        </Button>
+
+                        <WrapPanel Orientation="Horizontal">
+                            <StackPanel Margin="0,0,24,8" Width="100">
+                                <TextBlock Text="ИД КЛИЕНТ" FontSize="10" FontWeight="Bold"
+                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                <TextBlock Text="{Binding SelectedClient.Clientid, StringFormat='#{0}'}"
+                                           FontFamily="IBM Plex Mono, Consolas" FontSize="12.5"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,24,8" Width="140">
+                                <TextBlock Text="ИМЕ" FontSize="10" FontWeight="Bold"
+                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                <TextBlock Text="{Binding SelectedClient.Firstname}" FontSize="12.5"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,24,8" Width="140"
+                                        IsVisible="{Binding SelectedClient.Middlename, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                <TextBlock Text="ПРЕЗИМЕ" FontSize="10" FontWeight="Bold"
+                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                <TextBlock Text="{Binding SelectedClient.Middlename}" FontSize="12.5"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,24,8" Width="140">
+                                <TextBlock Text="ФАМИЛИЯ" FontSize="10" FontWeight="Bold"
+                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                <TextBlock Text="{Binding SelectedClient.Lastname}" FontSize="12.5"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,24,8" Width="140"
+                                        IsVisible="{Binding SelectedClient.Phone, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                <TextBlock Text="ТЕЛЕФОН" FontSize="10" FontWeight="Bold"
+                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                <TextBlock Text="{Binding SelectedClient.Phone}" FontSize="12.5"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,24,8" Width="200"
+                                        IsVisible="{Binding SelectedClient.Email, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                <TextBlock Text="ИМЕЙЛ" FontSize="10" FontWeight="Bold"
+                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                <TextBlock Text="{Binding SelectedClient.Email}" FontSize="12.5" Foreground="#3b6fa0"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,24,8" Width="240"
+                                        IsVisible="{Binding SelectedClient.Address, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                <TextBlock Text="АДРЕС" FontSize="10" FontWeight="Bold"
+                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                <TextBlock Text="{Binding SelectedClient.Address}" FontSize="12.5" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,24,8" Width="120"
+                                        IsVisible="{Binding SelectedClient.Clientlegaltype, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                <TextBlock Text="ПРАВЕН ТИП" FontSize="10" FontWeight="Bold"
+                                           Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,2"/>
+                                <TextBlock Text="{Binding SelectedClient.Clientlegaltype}" FontSize="12.5"/>
+                            </StackPanel>
+                        </WrapPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Classes="sm"
+                                    Command="{Binding EditClientCommand}"
+                                    CommandParameter="{Binding SelectedClient}">
+                                &#x270F;&#xFE0F; Редактиране на клиент
+                            </Button>
+                            <Button Classes="sm danger"
+                                    Command="{Binding DeleteClientCommand}"
+                                    CommandParameter="{Binding SelectedClient}">
+                                &#x1F5D1;&#xFE0F; Изтриване
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>

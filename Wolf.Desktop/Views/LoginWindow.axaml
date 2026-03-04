@@ -177,7 +177,8 @@
                         HorizontalAlignment="Center"
                         Spacing="8"
                         Margin="0,0,0,28">
-                <Border Width="52" Height="52"
+                <Border x:Name="LogoBorder"
+                        Width="52" Height="52"
                         CornerRadius="14"
                         Background="#c45d2c"
                         HorizontalAlignment="Center">
@@ -258,7 +259,8 @@
                     </Border>
 
                     <!-- Login button -->
-                    <Button IsEnabled="{Binding IsBusy, Converter={x:Static BoolConverters.Not}}"
+                    <Button x:Name="LoginButton"
+                            IsEnabled="{Binding IsBusy, Converter={x:Static BoolConverters.Not}}"
                             Command="{Binding LoginCommand}"
                             HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center"
@@ -300,7 +302,8 @@
 
             <!-- Logo with glow ring -->
             <Panel HorizontalAlignment="Center"
-                   Width="160" Height="160"
+                   Width="240" Height="240"
+                   ClipToBounds="False"
                    Margin="0,0,0,28">
                 <!-- Pulsing glow ring behind logo -->
                 <Border x:Name="GlowRing"
@@ -311,9 +314,9 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Opacity="0"
-                        RenderTransformOrigin="0.5,0.5">
+                        RenderTransformOrigin="50%,50%">
                     <Border.RenderTransform>
-                        <ScaleTransform/>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
                     </Border.RenderTransform>
                 </Border>
 
@@ -326,9 +329,9 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Opacity="0"
-                        RenderTransformOrigin="0.5,0.5">
+                        RenderTransformOrigin="50%,50%">
                     <Border.RenderTransform>
-                        <ScaleTransform/>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
                     </Border.RenderTransform>
                     <TextBlock Text="W"
                                FontSize="64" FontWeight="Bold"

@@ -46,8 +46,30 @@ public partial class EmployeeStatsViewModel : ViewModelBase
 
     private void Recalculate()
     {
-        var activities = ServiceLocator.Cache.GetActivitiesForEmployee(EmployeeId);
-        var tasks = ServiceLocator.Cache.GetTasksForEmployee(EmployeeId);
+        var allActivities = ServiceLocator.Cache.GetActivitiesForEmployee(EmployeeId);
+        var allTasks = ServiceLocator.Cache.GetTasksForEmployee(EmployeeId);
+
+        // Active mode: only include activities/tasks belonging to Active orders
+        IReadOnlyList<ActivityDto> activities;
+        IReadOnlyList<TaskDto> tasks;
+        if (!ServiceLocator.IsFullMode)
+        {
+            var activeRequestIds = new HashSet<int>();
+            foreach (var a in allActivities)
+            {
+                var req = ServiceLocator.Cache.GetRequest(a.Requestid);
+                if (req is not null && string.Equals(req.Status, "Active", StringComparison.OrdinalIgnoreCase))
+                    activeRequestIds.Add(a.Requestid);
+            }
+            activities = allActivities.Where(a => activeRequestIds.Contains(a.Requestid)).ToList();
+            var activeActivityIds = activities.Select(a => a.Activityid).ToHashSet();
+            tasks = allTasks.Where(t => activeActivityIds.Contains(t.Activityid)).ToList();
+        }
+        else
+        {
+            activities = allActivities;
+            tasks = allTasks;
+        }
 
         TotalActivities = activities.Count;
         TotalTasks = tasks.Count;

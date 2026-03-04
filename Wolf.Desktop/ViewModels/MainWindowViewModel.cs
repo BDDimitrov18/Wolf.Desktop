@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -269,6 +270,21 @@ public partial class MainWindowViewModel : ViewModelBase
 
             loginVm.LoginSucceeded += () =>
             {
+                if (ServiceLocator.IsFullMode)
+                {
+                    var res = Application.Current!.Resources;
+                    if (res["BrushAccent"] is SolidColorBrush a) a.Color = Color.Parse("#3b6fa0");
+                    if (res["BrushAccentHover"] is SolidColorBrush ah) ah.Color = Color.Parse("#2d5a87");
+                    if (res["BrushAccentLight"] is SolidColorBrush al) al.Color = Color.Parse("#edf3f9");
+                }
+                else
+                {
+                    var res = Application.Current!.Resources;
+                    if (res["BrushAccent"] is SolidColorBrush a) a.Color = Color.Parse("#c45d2c");
+                    if (res["BrushAccentHover"] is SolidColorBrush ah) ah.Color = Color.Parse("#a84e24");
+                    if (res["BrushAccentLight"] is SolidColorBrush al) al.Color = Color.Parse("#fdf0ea");
+                }
+
                 var mainWindow = new MainWindow
                 {
                     DataContext = new MainWindowViewModel()

@@ -180,6 +180,11 @@ public partial class InqueriesViewModel : ViewModelBase
         var allRequests = cache.GetAllRequests();
         var filteredRequests = allRequests.Where(r =>
         {
+            // Active mode: only active orders
+            if (!ServiceLocator.IsFullMode &&
+                !string.Equals(r.Status, "Active", StringComparison.OrdinalIgnoreCase))
+                return false;
+
             // Payment status filter
             if (!selectedPayments.Contains(r.Paymentstatus)) return false;
 

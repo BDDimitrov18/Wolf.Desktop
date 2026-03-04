@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Wolf.Desktop")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea4d391db4e69a608e6716df2d51595a634e2afe")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9727de25f662ba5f72db6e9191792aba52503117")]
 [assembly: System.Reflection.AssemblyProductAttribute("Wolf.Desktop")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Wolf.Desktop")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

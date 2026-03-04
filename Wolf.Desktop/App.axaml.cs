@@ -4,6 +4,7 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Wolf.Desktop.Services;
 using Wolf.Desktop.ViewModels;
 using Wolf.Desktop.Views;
@@ -30,6 +31,14 @@ public partial class App : Application
 
             loginVm.LoginSucceeded += () =>
             {
+                if (ServiceLocator.IsFullMode)
+                {
+                    var res = Application.Current!.Resources;
+                    if (res["BrushAccent"] is SolidColorBrush a) a.Color = Color.Parse("#3b6fa0");
+                    if (res["BrushAccentHover"] is SolidColorBrush ah) ah.Color = Color.Parse("#2d5a87");
+                    if (res["BrushAccentLight"] is SolidColorBrush al) al.Color = Color.Parse("#edf3f9");
+                }
+
                 var mainWindow = new MainWindow
                 {
                     DataContext = new MainWindowViewModel()

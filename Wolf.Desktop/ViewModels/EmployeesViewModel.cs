@@ -48,6 +48,9 @@ public partial class EmployeesViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void DeselectEmployee() => SelectedEmployee = null;
+
+    [RelayCommand]
     private void ViewStats(EmployeeDto? employee)
     {
         if (employee is not null && IsAdmin)
