@@ -143,6 +143,17 @@
             </Style.Animations>
         </Style>
 
+        <!-- Window control button hover -->
+        <Style Selector="Button.window-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#22ffffff"/>
+        </Style>
+        <Style Selector="Button.window-close:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#d42020"/>
+        </Style>
+        <Style Selector="Button.window-close:pointerover TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
         <!-- Splash title fade-in -->
         <Style Selector="TextBlock.splash-title.active">
             <Style.Animations>
@@ -356,11 +367,51 @@
             </TextBlock>
         </StackPanel>
 
-        <!-- Drag region for borderless window -->
-        <Border Background="Transparent"
-                Height="40"
-                VerticalAlignment="Top"
-                IsHitTestVisible="True"
-                x:Name="DragRegion"/>
+        <!-- Title bar: drag region + window controls -->
+        <Grid VerticalAlignment="Top" Height="40" ColumnDefinitions="*,Auto">
+            <!-- Drag region for borderless window -->
+            <Border Grid.Column="0"
+                    Background="Transparent"
+                    IsHitTestVisible="True"
+                    x:Name="DragRegion"/>
+
+            <!-- Window control buttons -->
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="0"
+                        VerticalAlignment="Top"
+                        Margin="0,0,4,0">
+                <Button x:Name="MinimizeButton"
+                        Classes="window-btn"
+                        Width="36" Height="28"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Padding="0"
+                        CornerRadius="0,0,4,4">
+                    <TextBlock Text="&#x2500;"
+                               FontSize="12"
+                               Foreground="#99ffffff"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Button>
+                <Button x:Name="CloseButton"
+                        Classes="window-btn window-close"
+                        Width="36" Height="28"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Padding="0"
+                        CornerRadius="0,0,4,4">
+                    <TextBlock Text="&#x2715;"
+                               FontSize="12"
+                               Foreground="#99ffffff"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

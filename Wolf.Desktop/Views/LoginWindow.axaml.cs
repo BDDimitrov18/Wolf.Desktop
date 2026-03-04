@@ -18,6 +18,15 @@ public partial class LoginWindow : Window
         if (dragRegion is not null)
             dragRegion.PointerPressed += OnDragRegionPressed;
 
+        // Window control buttons
+        var minimizeButton = this.FindControl<Button>("MinimizeButton");
+        if (minimizeButton is not null)
+            minimizeButton.Click += (_, _) => WindowState = WindowState.Minimized;
+
+        var closeButton = this.FindControl<Button>("CloseButton");
+        if (closeButton is not null)
+            closeButton.Click += (_, _) => Close();
+
         // Apply current mode colors
         ApplyModeColors();
 
